@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="movies_error_message">An error occurred. Try again.</string>
+    <string name="grid_item_description">Movie thumbnail</string>
+</resources>
