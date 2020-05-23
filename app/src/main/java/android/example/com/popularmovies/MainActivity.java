@@ -5,17 +5,24 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
+import java.net.URL;
+
 public class MainActivity extends AppCompatActivity {
 
     private final int GRID_NR_OR_COLUMNS = 3;
+    private final String SORT_POPULARITY = "most_popular";
+    private final String SORT_TOP_RATED = "top_rated";
 
     private RecyclerView mRecyclerView;
     private MoviesAdapter mMoviesAdapter;
@@ -45,16 +52,44 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected Movie[] doInBackground(String... strings) {
-            return new Movie[0];
+        protected Movie[] doInBackground(String... params) {
+
+            if(params.length == 0){
+                return null;
+            }
+
+            String sortType = params[0];
+            URL moviesRequestUrl = sortType == SORT_TOP_RATED ?
+                    NetworkUtils.buildTopRatedUrl() : NetworkUtils.buildPopularityUrl();
+
+            try{
+                String jsonMoviesResponse = NetworkUtils
+                        .getResponseFromHttpUrl(moviesRequestUrl);
+
+                Movie[] movieJsonWeatherData = null;
+
+                return movieJsonWeatherData;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Movie[] movies) {
-            super.onPostExecute(movies);
+        protected void onPostExecute(Movie[] moviesData) {
+            super.onPostExecute(moviesData);
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+
+            if(moviesData != null){
+                // To Do set adapter data
+            }else{
+                // To do show error message
+            }
         }
     }
 }
