@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.example.com.popularmovies.data.Movie;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.GridLayout;
 import android.widget.ProgressBar;
@@ -35,5 +37,24 @@ public class MainActivity extends AppCompatActivity {
                 RecyclerView.HORIZONTAL, false);
 
         mRecyclerView.setLayoutManager(layoutManager);
+    }
+
+
+    public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Movie[] doInBackground(String... strings) {
+            return new Movie[0];
+        }
+
+        @Override
+        protected void onPostExecute(Movie[] movies) {
+            super.onPostExecute(movies);
+        }
     }
 }
