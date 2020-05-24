@@ -5,18 +5,23 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.autofill.AutofillValue;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONException;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,15 +44,45 @@ public class MainActivity extends AppCompatActivity {
 
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
 
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, GRID_NR_OR_COLUMNS,
-                RecyclerView.HORIZONTAL, false);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3,
+                RecyclerView.VERTICAL, false);
 
         mRecyclerView.setLayoutManager(layoutManager);
+
+        mRecyclerView.setHasFixedSize(true);
+
+        mMoviesAdapter = new MoviesAdapter();
+
+        mRecyclerView.setAdapter(mMoviesAdapter);
+
+        loadMoviesData();
     }
 
+    private void loadMoviesData() {
+        showMoviesDataView();
 
-    public class FetchMoviesTask extends AsyncTask<String, Void, Movie[]>{
+        new FetchMoviesTask().execute(SORT_POPULARITY);
+    }
+
+    private void showMoviesDataView() {
+        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void showErrorMessage(){
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
+
+    private void loadImage(Movie movie, ImageView posterView){
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+
+
+    }
+
+    public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>>{
 
         @Override
         protected void onPreExecute() {
@@ -56,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Movie[] doInBackground(String... params) {
+        protected List<Movie> doInBackground(String... params) {
 
             if(params.length == 0){
                 return null;
@@ -70,25 +105,28 @@ public class MainActivity extends AppCompatActivity {
                 String jsonMoviesResponse = NetworkUtils
                         .getResponseFromHttpUrl(moviesRequestUrl);
 
-                Movie[] movieJsonWeatherData = null;
+                List<Movie> movieJsonData = MovieDatabaseJsonUtils.
+                        getMovieObjectsFromJson(jsonMoviesResponse);
 
-                return movieJsonWeatherData;
+                return movieJsonData;
 
-            } catch (IOException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
+
         }
 
         @Override
-        protected void onPostExecute(Movie[] moviesData) {
+        protected void onPostExecute(List<Movie> moviesData) {
             super.onPostExecute(moviesData);
             mLoadingIndicator.setVisibility(View.INVISIBLE);
 
             if(moviesData != null){
-                // To Do set adapter data
+                showMoviesDataView();
+                mMoviesAdapter.setMoviesData(moviesData);
             }else{
-                // To do show error message
+                showErrorMessage();
             }
         }
     }

@@ -8,15 +8,21 @@ public class Movie {
 
     private int movieId;
     private String originalTitle;
-    private ImageView moviePoster;
+    private String moviePoster;
     private String plotSynopsis;
     private Double userAverageRating;
     private Date releaseDate;
 
-
-    public Movie(){
-
+    public Movie(int movieId, String originalTitle, String moviePoster,
+                 String plotSynopsis, Double userAverageRating, Date releaseDate) {
+        this.movieId = movieId;
+        this.originalTitle = originalTitle;
+        this.moviePoster = moviePoster;
+        this.plotSynopsis = plotSynopsis;
+        this.userAverageRating = userAverageRating;
+        this.releaseDate = releaseDate;
     }
+
 
     public String getOriginalTitle() {
         return originalTitle;
@@ -26,11 +32,11 @@ public class Movie {
         this.originalTitle = originalTitle;
     }
 
-    public ImageView getMoviePoster() {
+    public String getMoviePoster() {
         return moviePoster;
     }
 
-    public void setMoviePoster(ImageView moviePoster) {
+    public void setMoviePoster(String moviePoster) {
         this.moviePoster = moviePoster;
     }
 

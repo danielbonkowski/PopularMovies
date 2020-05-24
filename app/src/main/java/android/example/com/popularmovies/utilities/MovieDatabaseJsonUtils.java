@@ -1,16 +1,20 @@
 package android.example.com.popularmovies.utilities;
 
 import android.example.com.popularmovies.data.Movie;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class MovieDatabaseJsonUtils {
 
-    public static Movie[] getMovieObjectsFromJson(String moviesJsonStr) throws JSONException {
+    public static List<Movie> getMovieObjectsFromJson(String moviesJsonStr) throws JSONException {
 
         final String MDB_RESULTS = "results";
 
@@ -21,7 +25,7 @@ public class MovieDatabaseJsonUtils {
         final String MDB_USER_AVERAGE_RATING = "vote_average";
         final String MDB_RELEASE_DATE = "release_date";
 
-        Movie[] parsedMoviesObjects = null;
+        List<Movie> parsedMoviesObjects = new ArrayList<Movie>();
 
         JSONObject moviesJson = new JSONObject(moviesJsonStr);
 
@@ -40,10 +44,14 @@ public class MovieDatabaseJsonUtils {
             String moviePoster = resultObject.getString(MDB_MOVIE_POSTER);
             String plotSynopsis = resultObject.getString(MDB_PLOT_SYNOPSIS);
             Double userAverageRating = resultObject.getDouble(MDB_USER_AVERAGE_RATING);
-            Date releaseDate = new Date(resultObject.getString(MDB_RELEASE_DATE));
+            String dateString = resultObject.getString(MDB_RELEASE_DATE);
+            Log.i(MovieDatabaseJsonUtils.class.getSimpleName(), "This is the date string: " + dateString);
+            Log.i(MovieDatabaseJsonUtils.class.getSimpleName(), "This is the movie poster string: " + moviePoster);
+            Date releaseDate = new Date();
 
-            Movie movie = new Movie();
-            parsedMoviesObjects[i] = movie;
+            Movie movie = new Movie(movieId, originalTitle, moviePoster,
+                    plotSynopsis, userAverageRating, releaseDate);
+            parsedMoviesObjects.add(movie);
         }
 
         return parsedMoviesObjects;

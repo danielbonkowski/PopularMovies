@@ -18,7 +18,7 @@ public final class NetworkUtils {
             "http://api.themoviedb.org/3/discover/movie?";
 
     private static final String THUMBNAIL_URL =
-            " http://image.tmdb.org/t/p/";
+            "https://image.tmdb.org/t/p/";
 
 
     private static final String api_key =
@@ -52,14 +52,14 @@ public final class NetworkUtils {
     }
 
 
-    public static URL buildThumbnailUrl(String thumbSize, String thumbPath){
+    public static Uri buildPosterUri(String thumbSize, String thumbPath){
 
         Uri builtUri = Uri.parse(THUMBNAIL_URL).buildUpon()
-                .appendPath(thumbSize)
-                .appendPath(thumbSize)
+                .appendEncodedPath(thumbSize)
+                .appendEncodedPath(thumbPath)
                 .build();
 
-        return buildUrl(builtUri);
+        return builtUri;
     }
 
 
