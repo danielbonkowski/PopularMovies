@@ -4,26 +4,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.view.autofill.AutofillValue;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.json.JSONException;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
 
     private final int GRID_NR_OR_COLUMNS = 3;
     private final String SORT_POPULARITY = "most_popular";
@@ -46,14 +45,13 @@ public class MainActivity extends AppCompatActivity {
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 3,
-                RecyclerView.VERTICAL, false);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
 
         mRecyclerView.setLayoutManager(layoutManager);
 
         mRecyclerView.setHasFixedSize(true);
 
-        mMoviesAdapter = new MoviesAdapter();
+        mMoviesAdapter = new MoviesAdapter(this);
 
         mRecyclerView.setAdapter(mMoviesAdapter);
 
@@ -78,6 +76,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadImage(Movie movie, ImageView posterView){
         mLoadingIndicator.setVisibility(View.VISIBLE);
+
+
+    }
+
+    @Override
+    public void onClick(Movie movieData) {
+        Context context = this;
+        Class activityToBeStarted = DetailActivity.class;
+
+        Intent showDetailsIntent = new Intent(context, activityToBeStarted);
+        showDetailsIntent.putExtra( "Movie",movieData);
+
+        startActivity(showDetailsIntent);
 
 
     }

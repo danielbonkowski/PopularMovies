@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
@@ -23,16 +23,22 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     private List<Movie> mMoviesData;
     private static final String POSTER_SIZE = "w185";
 
+    private final MoviesAdapterOnClickHandler mClickHandler;
+
+    public interface MoviesAdapterOnClickHandler{
+        void onClick(Movie movieData);
+    }
+
+    public MoviesAdapter(MoviesAdapterOnClickHandler clickHandler){
+        this.mClickHandler = clickHandler;
+    }
+
+
     public void setMoviesData(List<Movie> moviesData){
         Log.v(MoviesAdapter.class.getSimpleName(), "Set movies data");
-        mMoviesData = moviesData;
+        mMoviesData = new ArrayList<Movie>(moviesData);
         notifyDataSetChanged();
     }
-
-    public MoviesAdapter(){
-
-    }
-
 
 
     @NonNull
@@ -57,6 +63,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         Uri imageURL = NetworkUtils.buildPosterUri(POSTER_SIZE, singleMovieData.getMoviePoster());
         Log.v(MoviesAdapter.class.getSimpleName(), imageURL.toString());
         Picasso.get().load(imageURL).into(holder.mMoviesImageView);
+
+
     }
 
     @Override
@@ -70,13 +78,24 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
 
 
-    public class MoviesAdapterViewHolder extends RecyclerView.ViewHolder {
+    public class MoviesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final ImageView mMoviesImageView;
+
 
         public MoviesAdapterViewHolder(View itemView) {
             super(itemView);
             Log.v(MoviesAdapterViewHolder.class.getSimpleName(), "Movies adapter view holder constructor");
             mMoviesImageView = (ImageView) itemView.findViewById(R.id.iv_movies_thumbnail);
+
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            Movie movieData = mMoviesData.get(adapterPosition);
+            mClickHandler.onClick(movieData);
         }
     }
 }

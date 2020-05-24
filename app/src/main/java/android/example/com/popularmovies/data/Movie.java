@@ -2,9 +2,10 @@ package android.example.com.popularmovies.data;
 
 import android.widget.ImageView;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Movie {
+public class Movie implements Serializable {
 
     private int movieId;
     private String originalTitle;
