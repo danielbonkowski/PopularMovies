@@ -1,5 +1,6 @@
 package android.example.com.popularmovies;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,9 +12,15 @@ import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -22,11 +29,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler, AdapterView.OnItemSelectedListener{
 
     private final int GRID_NR_OR_COLUMNS = 3;
-    private final String SORT_POPULARITY = "most_popular";
-    private final String SORT_TOP_RATED = "top_rated";
+    private final String SORT_POPULARITY = "0";
+    private final String SORT_TOP_RATED = "1";
 
     private RecyclerView mRecyclerView;
     private MoviesAdapter mMoviesAdapter;
@@ -55,13 +62,19 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         mRecyclerView.setAdapter(mMoviesAdapter);
 
-        loadMoviesData();
+        fetchMostPopularMovies();
     }
 
-    private void loadMoviesData() {
+    private void fetchMostPopularMovies() {
         showMoviesDataView();
 
         new FetchMoviesTask().execute(SORT_POPULARITY);
+    }
+
+    private void fetchTopRatedMovies(){
+        showMoviesDataView();
+
+        new FetchMoviesTask().execute(SORT_TOP_RATED);
     }
 
     private void showMoviesDataView() {
@@ -74,12 +87,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
-    private void loadImage(Movie movie, ImageView posterView){
-        mLoadingIndicator.setVisibility(View.VISIBLE);
-
-
-    }
-
     @Override
     public void onClick(Movie movieData) {
         Context context = this;
@@ -89,7 +96,51 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         showDetailsIntent.putExtra( "Movie",movieData);
 
         startActivity(showDetailsIntent);
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.v(MainActivity.class.getSimpleName(), "On create options menu");
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.sort, menu);
+
+        // Creates a spinner and specifies choices
+        MenuItem menuItem = menu.findItem(R.id.action_sort);
+        Spinner spinner = (Spinner) menuItem.getActionView();
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.sort_array, R.layout.spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(this);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Log.v(MainActivity.class.getSimpleName(), "On options item selected");
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Log.v(MainActivity.class.getSimpleName(), "Position: " + position);
+
+        if(position == Integer.valueOf(SORT_POPULARITY)){
+            fetchMostPopularMovies();
+        }else if(position == Integer.valueOf(SORT_TOP_RATED)){
+            fetchTopRatedMovies();
+        }else{
+            showErrorMessage();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
 

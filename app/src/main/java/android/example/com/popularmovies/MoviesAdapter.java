@@ -57,8 +57,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     @Override
     public void onBindViewHolder(@NonNull MoviesAdapterViewHolder holder, int position) {
         Movie singleMovieData = mMoviesData.get(position);
-        Uri imageURL = NetworkUtils.buildPosterUri(POSTER_SIZE, singleMovieData.getMoviePoster());
-        Picasso.get().load(imageURL).into(holder.mMoviesImageView);
+        NetworkUtils.loadPosterImage(POSTER_SIZE, singleMovieData.getMoviePoster(),
+                holder.mMoviesImageView);
     }
 
     @Override

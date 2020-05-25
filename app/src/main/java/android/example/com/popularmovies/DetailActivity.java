@@ -17,6 +17,8 @@ import java.util.Date;
 
 public class DetailActivity extends AppCompatActivity {
 
+    private final String POSTER_SIZE = "w185";
+
     private ImageView mPosterImageView;
     private TextView mOriginalTitleTextView;
     private TextView mUserRatingTextView;
@@ -42,20 +44,22 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void showDetails(Movie movie){
-        // TODO load image to details screen
-
-        Uri imageURL = NetworkUtils.buildPosterUri("w185", movie.getMoviePoster());
-        Picasso.get().load(imageURL).into(mPosterImageView);
+        NetworkUtils.loadPosterImage(POSTER_SIZE, movie.getMoviePoster(),
+                mPosterImageView);
 
         String originalTitle = movie.getOriginalTitle();
         Double userRating = movie.getUserAverageRating();
         String plotSynopsis = movie.getPlotSynopsis();
         Date releaseDate = movie.getReleaseDate();
 
-        int day = releaseDate.getDate();
-        int month = releaseDate.getMonth() + 1;
-        int year = releaseDate.getYear() + 1900;
-        String date = day + "-" + month + "-" + year;
+        String date = getResources().getString(R.string.unknown_release_date);
+        if(releaseDate != null){
+            int day = releaseDate.getDate();
+            int month = releaseDate.getMonth() + 1;
+            int year = releaseDate.getYear() + 1900;
+            date = day + "-" + month + "-" + year;
+        }
+
 
         mOriginalTitleTextView.setText(originalTitle);
         mUserRatingTextView.setText(userRating.toString());

@@ -5,4 +5,11 @@
     <string name="title_label">Original title</string>
     <string name="release_date_label">Release date</string>
     <string name="user_rating_label">User rating</string>
+    <string name="sort_spinner_label">Sort</string>
+    <string name="unknown_release_date">unknown</string>
+
+    <string-array name="sort_array">
+        <item>Most popular</item>
+        <item>Top rated</item>
+    </string-array>
 </resources>

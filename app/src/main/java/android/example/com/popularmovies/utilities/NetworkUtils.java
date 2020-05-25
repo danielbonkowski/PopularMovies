@@ -2,6 +2,9 @@ package android.example.com.popularmovies.utilities;
 
 import android.net.Uri;
 import android.util.Log;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -96,5 +99,10 @@ public final class NetworkUtils {
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    public static void loadPosterImage(String size, String posterId, ImageView imageView){
+        Uri imageURL = NetworkUtils.buildPosterUri(size, posterId);
+        Picasso.get().load(imageURL).into(imageView);
     }
 }
