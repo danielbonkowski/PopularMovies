@@ -2,7 +2,7 @@
     <string name="app_name">Popular Movies</string>
     <string name="movies_error_message">An error occurred. Try again.</string>
     <string name="poster_description">Movie poster</string>
-    <string name="title_label">Original Title</string>
-    <string name="release_date_label">Release Date</string>
+    <string name="title_label">Original title</string>
+    <string name="release_date_label">Release date</string>
     <string name="user_rating_label">User rating</string>
 </resources>
