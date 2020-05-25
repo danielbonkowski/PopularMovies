@@ -44,7 +44,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     @NonNull
     @Override
     public MoviesAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.v(MoviesAdapter.class.getSimpleName(), "On create view holder");
         Context context = parent.getContext();
         int layoutIdForGridItem =  R.layout.grid_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -57,14 +56,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     @Override
     public void onBindViewHolder(@NonNull MoviesAdapterViewHolder holder, int position) {
-        Log.v(MoviesAdapter.class.getSimpleName(), "On bind view holder");
         Movie singleMovieData = mMoviesData.get(position);
-        Log.v(MoviesAdapter.class.getSimpleName(), "Movie poster: " + singleMovieData.getMoviePoster());
         Uri imageURL = NetworkUtils.buildPosterUri(POSTER_SIZE, singleMovieData.getMoviePoster());
-        Log.v(MoviesAdapter.class.getSimpleName(), imageURL.toString());
         Picasso.get().load(imageURL).into(holder.mMoviesImageView);
-
-
     }
 
     @Override
@@ -84,11 +78,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
         public MoviesAdapterViewHolder(View itemView) {
             super(itemView);
-            Log.v(MoviesAdapterViewHolder.class.getSimpleName(), "Movies adapter view holder constructor");
             mMoviesImageView = (ImageView) itemView.findViewById(R.id.iv_movies_thumbnail);
 
             itemView.setOnClickListener(this);
-
         }
 
         @Override

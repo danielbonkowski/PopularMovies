@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -45,9 +47,13 @@ public class MovieDatabaseJsonUtils {
             String plotSynopsis = resultObject.getString(MDB_PLOT_SYNOPSIS);
             Double userAverageRating = resultObject.getDouble(MDB_USER_AVERAGE_RATING);
             String dateString = resultObject.getString(MDB_RELEASE_DATE);
-            Log.i(MovieDatabaseJsonUtils.class.getSimpleName(), "This is the date string: " + dateString);
-            Log.i(MovieDatabaseJsonUtils.class.getSimpleName(), "This is the movie poster string: " + moviePoster);
-            Date releaseDate = new Date();
+
+            Date releaseDate = null;
+            try {
+                releaseDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+            }catch (ParseException e){
+                e.getStackTrace();
+            }
 
             Movie movie = new Movie(movieId, originalTitle, moviePoster,
                     plotSynopsis, userAverageRating, releaseDate);
