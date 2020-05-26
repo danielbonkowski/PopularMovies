@@ -7,6 +7,7 @@ import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,8 +31,8 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        Serializable serializableMovie =  getIntent().getSerializableExtra("Movie");
-        Movie movie = (Movie) serializableMovie;
+        Parcelable parcelableMovie =  getIntent().getParcelableExtra("Movie");
+        Movie movie = (Movie) parcelableMovie;
 
 
         mPosterImageView = (ImageView) findViewById(R.id.iv_details_poster);
@@ -48,22 +49,14 @@ public class DetailActivity extends AppCompatActivity {
                 mPosterImageView);
 
         String originalTitle = movie.getOriginalTitle();
-        Double userRating = movie.getUserAverageRating();
+        Double userRating =  movie.getUserAverageRating();
         String plotSynopsis = movie.getPlotSynopsis();
-        Date releaseDate = movie.getReleaseDate();
-
-        String date = getResources().getString(R.string.unknown_release_date);
-        if(releaseDate != null){
-            int day = releaseDate.getDate();
-            int month = releaseDate.getMonth() + 1;
-            int year = releaseDate.getYear() + 1900;
-            date = day + "-" + month + "-" + year;
-        }
+        String releaseDate = movie.getReleaseDate(DetailActivity.this);
 
 
         mOriginalTitleTextView.setText(originalTitle);
         mUserRatingTextView.setText(userRating.toString());
         mSynopsisTextView.setText(plotSynopsis);
-        mReleaseDateTextView.setText(date);
+        mReleaseDateTextView.setText(releaseDate);
     }
 }

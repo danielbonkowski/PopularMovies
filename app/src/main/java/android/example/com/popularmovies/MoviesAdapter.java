@@ -20,7 +20,7 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
-    private List<Movie> mMoviesData;
+    private List<Movie> mMoviesData = null;
     private static final String POSTER_SIZE = "w185";
 
     private final MoviesAdapterOnClickHandler mClickHandler;
@@ -34,8 +34,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     }
 
 
+    public ArrayList<Movie> getMoviesData(){
+        if(mMoviesData == null){
+            return null;
+        }
+        return new ArrayList<>(mMoviesData);
+    }
+
     public void setMoviesData(List<Movie> moviesData){
-        Log.v(MoviesAdapter.class.getSimpleName(), "Set movies data");
         mMoviesData = new ArrayList<Movie>(moviesData);
         notifyDataSetChanged();
     }
@@ -63,7 +69,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     @Override
     public int getItemCount() {
-        Log.v(MoviesAdapter.class.getSimpleName(), "On get item count");
         if(mMoviesData == null){
             return 0;
         }

@@ -1,7 +1,10 @@
 package android.example.com.popularmovies.data;
 
+import android.content.Context;
+import android.example.com.popularmovies.R;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -9,7 +12,7 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Movie implements Parcelable {
+public class Movie implements Parcelable, Serializable {
 
     private int movieId;
     private String originalTitle;
@@ -34,11 +37,7 @@ public class Movie implements Parcelable {
         originalTitle = in.readString();
         moviePoster = in.readString();
         plotSynopsis = in.readString();
-        if (in.readByte() == 0) {
-            userAverageRating = null;
-        } else {
-            userAverageRating = in.readDouble();
-        }
+        userAverageRating = in.readDouble();
         releaseDate = new Date(in.readLong());
     }
 
@@ -54,53 +53,35 @@ public class Movie implements Parcelable {
         }
     };
 
+
     public String getOriginalTitle() {
         return originalTitle;
-    }
-
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
     }
 
     public String getMoviePoster() {
         return moviePoster;
     }
 
-    public void setMoviePoster(String moviePoster) {
-        this.moviePoster = moviePoster;
-    }
-
     public String getPlotSynopsis() {
         return plotSynopsis;
-    }
-
-    public void setPlotSynopsis(String plotSynopsis) {
-        this.plotSynopsis = plotSynopsis;
     }
 
     public Double getUserAverageRating() {
         return userAverageRating;
     }
 
-    public void setUserAverageRating(Double userAverageRating) {
-        this.userAverageRating = userAverageRating;
+    public String getReleaseDate(Context context) {
+        String date = context.getResources().getString(R.string.unknown_release_date);
+        if(releaseDate != null && releaseDate.getTime() != 0){
+            int day = releaseDate.getDate();
+            int month = releaseDate.getMonth() + 1;
+            int year = releaseDate.getYear() + 1900;
+            date = day + "-" + month + "-" + year;
+        }
+
+        return date;
     }
 
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public int getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(int movieId) {
-        this.movieId = movieId;
-    }
 
 
     @Override
@@ -115,7 +96,7 @@ public class Movie implements Parcelable {
         dest.writeString(moviePoster);
         dest.writeString(plotSynopsis);
         dest.writeDouble(userAverageRating);
-        dest.writeLong(releaseDate.getTime());
+        dest.writeLong(releaseDate == null? 0 : releaseDate.getTime());
     }
 
     @NonNull

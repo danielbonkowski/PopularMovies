@@ -12,6 +12,8 @@ import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +28,9 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler, AdapterView.OnItemSelectedListener{
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
+
+    private int mSortSpinnerPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +68,31 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         mRecyclerView.setAdapter(mMoviesAdapter);
 
-        fetchMostPopularMovies();
+        if(savedInstanceState == null || !savedInstanceState.containsKey("movies")){
+            Log.i(MainActivity.class.getSimpleName(), "Instance is empty");
+            fetchMostPopularMovies();
+
+        }else{
+            Log.i(MainActivity.class.getSimpleName(), "Instance is not empty");
+            List<Movie> movies = savedInstanceState.getParcelableArrayList("movies");
+            mMoviesAdapter.setMoviesData(movies);
+            mRecyclerView.setAdapter(mMoviesAdapter);
+
+            mSortSpinnerPosition = savedInstanceState.getInt("spinnerPosition");
+            Log.i(MainActivity.class.getSimpleName(), "Spinner instance position: " + mSortSpinnerPosition);
+        }
+
     }
 
     private void fetchMostPopularMovies() {
+        Log.i(MainActivity.class.getSimpleName(), "Fetch most popular movies");
         showMoviesDataView();
 
         new FetchMoviesTask().execute(SORT_POPULARITY);
     }
 
     private void fetchTopRatedMovies(){
+        Log.i(MainActivity.class.getSimpleName(), "Fetch top rated movies");
         showMoviesDataView();
 
         new FetchMoviesTask().execute(SORT_TOP_RATED);
@@ -88,15 +109,27 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        Log.i(MainActivity.class.getSimpleName(), "onSaveInstanceState");
+        if(mMoviesAdapter != null){
+            outState.putParcelableArrayList("movies", mMoviesAdapter.getMoviesData());
+            outState.putInt("spinnerPosition", mSortSpinnerPosition);
+        }
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onClick(Movie movieData) {
         Context context = this;
         Class activityToBeStarted = DetailActivity.class;
 
         Intent showDetailsIntent = new Intent(context, activityToBeStarted);
-        showDetailsIntent.putExtra( "Movie",movieData);
+        showDetailsIntent.putExtra( "Movie", (Parcelable) movieData);
 
-        startActivity(showDetailsIntent);
+        startActivityForResult(showDetailsIntent, 0);
     }
+    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -115,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        spinner.setSelection(mSortSpinnerPosition, true);
         spinner.setOnItemSelectedListener(this);
 
         return true;
@@ -130,9 +164,15 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Log.v(MainActivity.class.getSimpleName(), "Position: " + position);
 
-        if(position == Integer.valueOf(SORT_POPULARITY)){
+        if(mSortSpinnerPosition == position){
+            return;
+        }
+
+        mSortSpinnerPosition = position;
+
+        if(mSortSpinnerPosition == Integer.valueOf(SORT_POPULARITY)){
             fetchMostPopularMovies();
-        }else if(position == Integer.valueOf(SORT_TOP_RATED)){
+        }else if(mSortSpinnerPosition == Integer.valueOf(SORT_TOP_RATED)){
             fetchTopRatedMovies();
         }else{
             showErrorMessage();
