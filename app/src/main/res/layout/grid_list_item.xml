@@ -5,8 +5,8 @@
     android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/iv_movies_thumbnail"
-        android:layout_width="125dp"
-        android:layout_height="200dp"
+        android:layout_width="205dp"
+        android:layout_height="308dp"
         android:scaleType="centerCrop"
         android:contentDescription="@string/poster_description"/>
 </LinearLayout>

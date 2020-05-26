@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.utilities.ImageUtils;
 import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.os.AsyncTask;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        int columnsSpan = ImageUtils.calculateNrOfColumns(MainActivity.this);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movies);
 
@@ -60,7 +62,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+
+        GridLayoutManager layoutManager = new GridLayoutManager(this, columnsSpan);
 
         mRecyclerView.setLayoutManager(layoutManager);
 

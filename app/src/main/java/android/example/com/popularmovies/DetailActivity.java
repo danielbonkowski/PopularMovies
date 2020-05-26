@@ -2,6 +2,7 @@ package android.example.com.popularmovies;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.utilities.ImageUtils;
@@ -55,7 +56,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void showDetails(Movie movie){
-        ImageUtils.loadPosterImage(POSTER_SIZE, movie.getMoviePoster(),
+        Context context = mPosterImageView.getContext();
+        ImageUtils.loadPosterImage(context, movie.getMoviePoster(),
                 mPosterImageView);
 
         String originalTitle = movie.getOriginalTitle();

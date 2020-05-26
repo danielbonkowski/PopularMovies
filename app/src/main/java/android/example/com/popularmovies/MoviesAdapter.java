@@ -67,7 +67,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     @Override
     public void onBindViewHolder(@NonNull MoviesAdapterViewHolder holder, int position) {
         Movie singleMovieData = mMoviesData.get(position);
-        ImageUtils.loadPosterImage(POSTER_SIZE, singleMovieData.getMoviePoster(),
+        ImageUtils.loadPosterImage(holder.mMoviesImageView.getContext(), singleMovieData.getMoviePoster(),
                 holder.mMoviesImageView);
     }
 
@@ -83,12 +83,18 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     public class MoviesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final ImageView mMoviesImageView;
+        private final double heightToWidthRatio = 1.5;
 
 
         public MoviesAdapterViewHolder(View itemView) {
             super(itemView);
+            Context context = itemView.getContext();
             mMoviesImageView = (ImageView) itemView.findViewById(R.id.iv_movies_thumbnail);
 
+            int imageViewWidth = ImageUtils.calculateColumnWidth(context, ImageUtils.calculateNrOfColumns(context));
+            int imageViewHeight = (int) (imageViewWidth * 1.5);
+            mMoviesImageView.getLayoutParams().width = imageViewWidth;
+            mMoviesImageView.getLayoutParams().height = imageViewHeight;
             itemView.setOnClickListener(this);
         }
 
