@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.Date;
 
 public class Movie implements Parcelable, Serializable {
@@ -72,17 +73,18 @@ public class Movie implements Parcelable, Serializable {
 
     public String getReleaseDate(Context context) {
         String date = context.getResources().getString(R.string.unknown_release_date);
+
         if(releaseDate != null && releaseDate.getTime() != 0){
-            int day = releaseDate.getDate();
-            int month = releaseDate.getMonth() + 1;
-            int year = releaseDate.getYear() + 1900;
-            date = day + "-" + month + "-" + year;
+            date = formatDate(context);
         }
 
         return date;
     }
 
-
+    private String formatDate(Context context){
+        DateFormat formattedDate = android.text.format.DateFormat.getDateFormat(context);
+        return formattedDate.format(releaseDate);
+    }
 
     @Override
     public int describeContents() {

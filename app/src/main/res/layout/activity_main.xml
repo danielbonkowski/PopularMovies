@@ -19,6 +19,7 @@
         android:padding="16dp"
         android:textSize="20sp"
         android:visibility="invisible"
+        android:layout_gravity="center"
         android:text="@string/movies_error_message"/>
 
     <ProgressBar

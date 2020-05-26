@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.utilities.ImageUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,8 +45,17 @@ public class DetailActivity extends AppCompatActivity {
         showDetails(movie);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("returnMovies",
+                getIntent().getParcelableArrayListExtra("movies"));
+        setResult(1, returnIntent);
+        finish();
+    }
+
     public void showDetails(Movie movie){
-        NetworkUtils.loadPosterImage(POSTER_SIZE, movie.getMoviePoster(),
+        ImageUtils.loadPosterImage(POSTER_SIZE, movie.getMoviePoster(),
                 mPosterImageView);
 
         String originalTitle = movie.getOriginalTitle();

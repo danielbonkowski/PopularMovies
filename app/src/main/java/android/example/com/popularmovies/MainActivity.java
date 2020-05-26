@@ -1,6 +1,7 @@
 package android.example.com.popularmovies;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -75,6 +77,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         }else{
             Log.i(MainActivity.class.getSimpleName(), "Instance is not empty");
             List<Movie> movies = savedInstanceState.getParcelableArrayList("movies");
+            if(movies == null){
+                showErrorMessage();
+                return;
+            }
             mMoviesAdapter.setMoviesData(movies);
             mRecyclerView.setAdapter(mMoviesAdapter);
 
@@ -126,10 +132,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         Intent showDetailsIntent = new Intent(context, activityToBeStarted);
         showDetailsIntent.putExtra( "Movie", (Parcelable) movieData);
+        showDetailsIntent.putParcelableArrayListExtra("movies", mMoviesAdapter.getMoviesData());
 
-        startActivityForResult(showDetailsIntent, 0);
+        startActivity(showDetailsIntent);
     }
-    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -18,7 +18,7 @@ public final class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
     private static final String GRID_MOVIES_URL =
-            "http://api.themoviedb.org/3/discover/movie?";
+            "https://api.themoviedb.org/3/movie/";
 
     private static final String THUMBNAIL_URL =
             "https://image.tmdb.org/t/p/";
@@ -26,8 +26,8 @@ public final class NetworkUtils {
 
     private static final String api_key =
             "58805f67e972e203a3e4cba8d3e54e00";
-    private static final String sort_popularity = "popularity.desc";
-    private static final String sort_top_rated = "vote_average.desc";
+    private static final String sort_popularity = "popular";
+    private static final String sort_top_rated = "top_rated";
 
 
     final static String SORT_PARAM = "sort_by";
@@ -47,22 +47,11 @@ public final class NetworkUtils {
     public static URL buildSortUrl(String sortType){
 
         Uri builtUri = Uri.parse(GRID_MOVIES_URL).buildUpon()
-                .appendQueryParameter(SORT_PARAM, sortType)
+                .appendEncodedPath(sortType)
                 .appendQueryParameter(API_KEY_PARAM, api_key)
                 .build();
 
         return buildUrl(builtUri);
-    }
-
-
-    public static Uri buildPosterUri(String thumbSize, String thumbPath){
-
-        Uri builtUri = Uri.parse(THUMBNAIL_URL).buildUpon()
-                .appendEncodedPath(thumbSize)
-                .appendEncodedPath(thumbPath)
-                .build();
-
-        return builtUri;
     }
 
 
@@ -82,6 +71,18 @@ public final class NetworkUtils {
     }
 
 
+    public static Uri buildPosterUri(String thumbSize, String thumbPath){
+
+        Uri builtUri = Uri.parse(THUMBNAIL_URL).buildUpon()
+                .appendEncodedPath(thumbSize)
+                .appendEncodedPath(thumbPath)
+                .build();
+
+        return builtUri;
+    }
+
+
+
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
@@ -99,10 +100,5 @@ public final class NetworkUtils {
         } finally {
             urlConnection.disconnect();
         }
-    }
-
-    public static void loadPosterImage(String size, String posterId, ImageView imageView){
-        Uri imageURL = NetworkUtils.buildPosterUri(size, posterId);
-        Picasso.get().load(imageURL).into(imageView);
     }
 }

@@ -2,6 +2,7 @@ package android.example.com.popularmovies;
 
 import android.content.Context;
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.utilities.ImageUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.net.Uri;
 import android.util.Log;
@@ -42,8 +43,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     }
 
     public void setMoviesData(List<Movie> moviesData){
-        mMoviesData = new ArrayList<Movie>(moviesData);
-        notifyDataSetChanged();
+        if(moviesData != null){
+            mMoviesData = new ArrayList<Movie>(moviesData);
+            notifyDataSetChanged();
+        }
+
     }
 
 
@@ -63,7 +67,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     @Override
     public void onBindViewHolder(@NonNull MoviesAdapterViewHolder holder, int position) {
         Movie singleMovieData = mMoviesData.get(position);
-        NetworkUtils.loadPosterImage(POSTER_SIZE, singleMovieData.getMoviePoster(),
+        ImageUtils.loadPosterImage(POSTER_SIZE, singleMovieData.getMoviePoster(),
                 holder.mMoviesImageView);
     }
 
