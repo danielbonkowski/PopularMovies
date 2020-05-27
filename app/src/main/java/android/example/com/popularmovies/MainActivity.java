@@ -13,7 +13,6 @@ import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,11 +48,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         setContentView(R.layout.activity_main);
         int columnsSpan = ImageUtils.calculateNrOfColumns(MainActivity.this);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movies);
+        mRecyclerView = findViewById(R.id.recyclerview_movies);
 
-        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
+        mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
 
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, columnsSpan);
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         Class activityToBeStarted = DetailActivity.class;
 
         Intent showDetailsIntent = new Intent(context, activityToBeStarted);
-        showDetailsIntent.putExtra( "Movie", (Parcelable) movieData);
+        showDetailsIntent.putExtra( "Movie", movieData);
 
         startActivity(showDetailsIntent);
     }
@@ -179,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     }
 
-    public class FetchMoviesTask extends AsyncTask<Integer, Void, List<Movie>>{
+    class FetchMoviesTask extends AsyncTask<Integer, Void, List<Movie>>{
 
         @Override
         protected void onPreExecute() {
@@ -202,10 +201,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 String jsonMoviesResponse = NetworkUtils
                         .getResponseFromHttpUrl(moviesRequestUrl);
 
-                List<Movie> movieJsonData = MovieDatabaseJsonUtils.
-                        getMovieObjectsFromJson(jsonMoviesResponse);
-
-                return movieJsonData;
+                return MovieDatabaseJsonUtils.getMovieObjectsFromJson(jsonMoviesResponse);
 
             } catch (IOException | JSONException e) {
                 e.printStackTrace();

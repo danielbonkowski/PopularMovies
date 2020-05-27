@@ -25,13 +25,9 @@ public class MovieDatabaseJsonUtils {
         final String MDB_USER_AVERAGE_RATING = "vote_average";
         final String MDB_RELEASE_DATE = "release_date";
 
-        List<Movie> parsedMoviesObjects = new ArrayList<Movie>();
+        List<Movie> parsedMoviesObjects = new ArrayList<>();
 
         JSONObject moviesJson = new JSONObject(moviesJsonStr);
-
-        if(moviesJson == null){
-            return null;
-        }
 
         JSONArray resultsArray = moviesJson.getJSONArray(MDB_RESULTS);
 

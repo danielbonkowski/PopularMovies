@@ -21,7 +21,7 @@ public class ImageUtils {
     private static String calculateImageSize(Context context){
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         double screenDensity = displayMetrics.densityDpi;
-        String size = "";
+        String size;
         if(screenDensity < 100){
             size = "w94";
         }
@@ -54,8 +54,7 @@ public class ImageUtils {
             imageSizeInPixels = Integer.parseInt(matcher.group());
         }
 
-        int columns =  Math.round(screenWidth / imageSizeInPixels  * (imageSizeInPixels / density));
-        return columns;
+        return Math.round(screenWidth / imageSizeInPixels  * (imageSizeInPixels / density));
     }
 
     public static int calculateColumnWidth(Context context, int nrOfColumns){

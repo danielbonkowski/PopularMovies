@@ -12,12 +12,12 @@ import java.util.Date;
 
 public class Movie implements Parcelable {
 
-    private int movieId;
-    private String originalTitle;
-    private String moviePoster;
-    private String plotSynopsis;
-    private Double userAverageRating;
-    private Date releaseDate;
+    private final int movieId;
+    private final String originalTitle;
+    private final String moviePoster;
+    private final String plotSynopsis;
+    private final Double userAverageRating;
+    private final Date releaseDate;
 
     public Movie(int movieId, String originalTitle, String moviePoster,
                  String plotSynopsis, Double userAverageRating, Date releaseDate) {

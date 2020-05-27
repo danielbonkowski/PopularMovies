@@ -10,8 +10,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 public final class NetworkUtils {
-
-    private static final String TAG = NetworkUtils.class.getSimpleName();
+    private static final String api_key = "ENTER_YOUR_API_KEY_HERE";
 
     private static final String GRID_MOVIES_URL =
             "https://api.themoviedb.org/3/movie/";
@@ -20,12 +19,10 @@ public final class NetworkUtils {
             "https://image.tmdb.org/t/p/";
 
 
-    private static final String api_key =
-            "58805f67e972e203a3e4cba8d3e54e00";
     private static final String sort_popularity = "popular";
     private static final String sort_top_rated = "top_rated";
 
-    final static String API_KEY_PARAM = "api_key";
+    private final static String API_KEY_PARAM = "api_key";
 
 
     public static URL buildPopularityUrl(){
@@ -37,7 +34,7 @@ public final class NetworkUtils {
     }
 
 
-    public static URL buildSortUrl(String sortType){
+    private static URL buildSortUrl(String sortType){
 
         Uri builtUri = Uri.parse(GRID_MOVIES_URL).buildUpon()
                 .appendEncodedPath(sortType)
@@ -48,7 +45,7 @@ public final class NetworkUtils {
     }
 
 
-    public static URL buildUrl(Uri builtUri){
+    private static URL buildUrl(Uri builtUri){
 
         URL url = null;
 
@@ -64,12 +61,10 @@ public final class NetworkUtils {
 
     public static Uri buildPosterUri(String thumbSize, String thumbPath){
 
-        Uri builtUri = Uri.parse(THUMBNAIL_URL).buildUpon()
+        return Uri.parse(THUMBNAIL_URL).buildUpon()
                 .appendEncodedPath(thumbSize)
                 .appendEncodedPath(thumbPath)
                 .build();
-
-        return builtUri;
     }
 
 

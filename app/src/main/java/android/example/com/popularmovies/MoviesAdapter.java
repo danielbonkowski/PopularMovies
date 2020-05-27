@@ -38,7 +38,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     public void setMoviesData(List<Movie> moviesData){
         if(moviesData != null){
-            mMoviesData = new ArrayList<Movie>(moviesData);
+            mMoviesData = new ArrayList<>(moviesData);
             notifyDataSetChanged();
         }
 
@@ -54,7 +54,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(layoutIdForGridItem, parent,
-                shouldAttachToParentImmediately);
+                false);
         return new MoviesAdapterViewHolder(view);
     }
 
@@ -76,17 +76,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
 
     public class MoviesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final ImageView mMoviesImageView;
-        private final double heightToWidthRatio = 1.5;
+        final ImageView mMoviesImageView;
 
 
-        public MoviesAdapterViewHolder(View itemView) {
+        MoviesAdapterViewHolder(View itemView) {
             super(itemView);
             Context context = itemView.getContext();
-            mMoviesImageView = (ImageView) itemView.findViewById(R.id.iv_movies_thumbnail);
+            mMoviesImageView = itemView.findViewById(R.id.iv_movies_thumbnail);
 
             int imageViewWidth = ImageUtils.calculateColumnWidth(context, ImageUtils.calculateNrOfColumns(context));
-            int imageViewHeight = (int) (imageViewWidth * 1.5);
+            double heightToWidthRatio = 1.5;
+            int imageViewHeight = (int) (imageViewWidth * heightToWidthRatio);
             mMoviesImageView.getLayoutParams().width = imageViewWidth;
             mMoviesImageView.getLayoutParams().height = imageViewHeight;
             itemView.setOnClickListener(this);

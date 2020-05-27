@@ -3,7 +3,6 @@ package android.example.com.popularmovies;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.utilities.ImageUtils;
 import android.os.Bundle;
@@ -28,16 +27,21 @@ public class DetailActivity extends AppCompatActivity {
         Movie movie = (Movie) parcelableMovie;
 
 
-        mPosterImageView = (ImageView) findViewById(R.id.iv_details_poster);
-        mOriginalTitleTextView = (TextView) findViewById(R.id.tv_details_original_title);
-        mUserRatingTextView = (TextView) findViewById(R.id.tv_details_user_rating);
-        mSynopsisTextView = (TextView) findViewById(R.id.tv_details_synopsis);
-        mReleaseDateTextView = (TextView) findViewById(R.id.tv_details_release_date);
+        mPosterImageView = findViewById(R.id.iv_details_poster);
+        mOriginalTitleTextView = findViewById(R.id.tv_details_original_title);
+        mUserRatingTextView = findViewById(R.id.tv_details_user_rating);
+        mSynopsisTextView = findViewById(R.id.tv_details_synopsis);
+        mReleaseDateTextView = findViewById(R.id.tv_details_release_date);
 
         showDetails(movie);
     }
 
-    public void showDetails(Movie movie){
+    private void showDetails(Movie movie){
+
+        if(movie == null){
+            return;
+        }
+
         Context context = mPosterImageView.getContext();
         ImageUtils.loadPosterImage(context, movie.getMoviePoster(),
                 mPosterImageView);
