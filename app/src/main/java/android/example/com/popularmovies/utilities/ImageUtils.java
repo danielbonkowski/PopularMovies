@@ -3,7 +3,6 @@ package android.example.com.popularmovies.utilities;
 import android.content.Context;
 import android.net.Uri;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -46,9 +45,6 @@ public class ImageUtils {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float screenWidth = displayMetrics.widthPixels;
         float density = displayMetrics.densityDpi;
-        float widthDPI = screenWidth / density;
-
-        Log.v(ImageUtils.class.getSimpleName(), "Density is: " + widthDPI);
 
         String size = calculateImageSize(context);
         Pattern pattern = Pattern.compile("\\d+");

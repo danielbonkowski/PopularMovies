@@ -4,16 +4,13 @@ import android.content.Context;
 import android.example.com.popularmovies.R;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Date;
 
-public class Movie implements Parcelable, Serializable {
+public class Movie implements Parcelable {
 
     private int movieId;
     private String originalTitle;
@@ -53,7 +50,6 @@ public class Movie implements Parcelable, Serializable {
             return new Movie[size];
         }
     };
-
 
     public String getOriginalTitle() {
         return originalTitle;

@@ -6,21 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.utilities.ImageUtils;
-import android.example.com.popularmovies.utilities.NetworkUtils;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.Serializable;
-import java.util.Date;
-
 public class DetailActivity extends AppCompatActivity {
-
-    private final String POSTER_SIZE = "w185";
 
     private ImageView mPosterImageView;
     private TextView mOriginalTitleTextView;
@@ -44,15 +35,6 @@ public class DetailActivity extends AppCompatActivity {
         mReleaseDateTextView = (TextView) findViewById(R.id.tv_details_release_date);
 
         showDetails(movie);
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("returnMovies",
-                getIntent().getParcelableArrayListExtra("movies"));
-        setResult(1, returnIntent);
-        finish();
     }
 
     public void showDetails(Movie movie){

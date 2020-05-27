@@ -3,9 +3,6 @@ package android.example.com.popularmovies;
 import android.content.Context;
 import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.utilities.ImageUtils;
-import android.example.com.popularmovies.utilities.NetworkUtils;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +11,12 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
     private List<Movie> mMoviesData = null;
-    private static final String POSTER_SIZE = "w185";
 
     private final MoviesAdapterOnClickHandler mClickHandler;
 

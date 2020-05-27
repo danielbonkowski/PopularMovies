@@ -1,7 +1,6 @@
 package android.example.com.popularmovies;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,15 +14,12 @@ import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.os.PersistableBundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -31,16 +27,13 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler, AdapterView.OnItemSelectedListener{
 
-    private final int GRID_NR_OR_COLUMNS = 3;
-    private final String SORT_POPULARITY = "0";
-    private final String SORT_TOP_RATED = "1";
+    private final int SORT_POPULARITY = 0;
+    private final int SORT_TOP_RATED = 1;
 
     private RecyclerView mRecyclerView;
     private MoviesAdapter mMoviesAdapter;
@@ -74,11 +67,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mRecyclerView.setAdapter(mMoviesAdapter);
 
         if(savedInstanceState == null || !savedInstanceState.containsKey("movies")){
-            Log.i(MainActivity.class.getSimpleName(), "Instance is empty");
             fetchMostPopularMovies();
 
         }else{
-            Log.i(MainActivity.class.getSimpleName(), "Instance is not empty");
             List<Movie> movies = savedInstanceState.getParcelableArrayList("movies");
             if(movies == null){
                 showErrorMessage();
@@ -88,20 +79,17 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             mRecyclerView.setAdapter(mMoviesAdapter);
 
             mSortSpinnerPosition = savedInstanceState.getInt("spinnerPosition");
-            Log.i(MainActivity.class.getSimpleName(), "Spinner instance position: " + mSortSpinnerPosition);
         }
 
     }
 
     private void fetchMostPopularMovies() {
-        Log.i(MainActivity.class.getSimpleName(), "Fetch most popular movies");
         showMoviesDataView();
 
         new FetchMoviesTask().execute(SORT_POPULARITY);
     }
 
     private void fetchTopRatedMovies(){
-        Log.i(MainActivity.class.getSimpleName(), "Fetch top rated movies");
         showMoviesDataView();
 
         new FetchMoviesTask().execute(SORT_TOP_RATED);
@@ -119,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        Log.i(MainActivity.class.getSimpleName(), "onSaveInstanceState");
         if(mMoviesAdapter != null){
             outState.putParcelableArrayList("movies", mMoviesAdapter.getMoviesData());
             outState.putInt("spinnerPosition", mSortSpinnerPosition);
@@ -135,19 +122,21 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         Intent showDetailsIntent = new Intent(context, activityToBeStarted);
         showDetailsIntent.putExtra( "Movie", (Parcelable) movieData);
-        showDetailsIntent.putParcelableArrayListExtra("movies", mMoviesAdapter.getMoviesData());
 
         startActivity(showDetailsIntent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.v(MainActivity.class.getSimpleName(), "On create options menu");
-
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sort, menu);
 
-        // Creates a spinner and specifies choices
+        createMenuSpinner(menu);
+
+        return true;
+    }
+
+    private void createMenuSpinner(Menu menu) {
         MenuItem menuItem = menu.findItem(R.id.action_sort);
         Spinner spinner = (Spinner) menuItem.getActionView();
 
@@ -159,29 +148,26 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         spinner.setSelection(mSortSpinnerPosition, true);
         spinner.setOnItemSelectedListener(this);
-
-        return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Log.v(MainActivity.class.getSimpleName(), "On options item selected");
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Log.v(MainActivity.class.getSimpleName(), "Position: " + position);
-
         if(mSortSpinnerPosition == position){
             return;
         }
 
         mSortSpinnerPosition = position;
 
-        if(mSortSpinnerPosition == Integer.valueOf(SORT_POPULARITY)){
+        if(mSortSpinnerPosition == SORT_POPULARITY){
             fetchMostPopularMovies();
-        }else if(mSortSpinnerPosition == Integer.valueOf(SORT_TOP_RATED)){
+        }else if(mSortSpinnerPosition == SORT_TOP_RATED){
             fetchTopRatedMovies();
         }else{
             showErrorMessage();
@@ -193,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     }
 
-    public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>>{
+    public class FetchMoviesTask extends AsyncTask<Integer, Void, List<Movie>>{
 
         @Override
         protected void onPreExecute() {
@@ -202,13 +188,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         }
 
         @Override
-        protected List<Movie> doInBackground(String... params) {
+        protected List<Movie> doInBackground(Integer... params) {
 
             if(params.length == 0){
                 return null;
             }
 
-            String sortType = params[0];
+            int sortType = params[0];
             URL moviesRequestUrl = sortType == SORT_TOP_RATED ?
                     NetworkUtils.buildTopRatedUrl() : NetworkUtils.buildPopularityUrl();
 

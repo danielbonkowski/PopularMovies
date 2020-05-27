@@ -1,10 +1,6 @@
 package android.example.com.popularmovies.utilities;
 
 import android.net.Uri;
-import android.util.Log;
-import android.widget.ImageView;
-
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,15 +25,12 @@ public final class NetworkUtils {
     private static final String sort_popularity = "popular";
     private static final String sort_top_rated = "top_rated";
 
-
-    final static String SORT_PARAM = "sort_by";
     final static String API_KEY_PARAM = "api_key";
 
 
     public static URL buildPopularityUrl(){
         return buildSortUrl(sort_popularity);
     }
-
 
     public static URL buildTopRatedUrl(){
         return buildSortUrl(sort_top_rated);
@@ -64,8 +57,6 @@ public final class NetworkUtils {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
-        Log.v(TAG, "Built URI " + url);
 
         return url;
     }
