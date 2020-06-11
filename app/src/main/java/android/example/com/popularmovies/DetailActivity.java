@@ -1,9 +1,13 @@
 package android.example.com.popularmovies;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.databinding.ActivityDetailBinding;
 import android.example.com.popularmovies.utilities.ImageUtils;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -12,26 +16,28 @@ import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private ImageView mPosterImageView;
-    private TextView mOriginalTitleTextView;
-    private TextView mUserRatingTextView;
-    private TextView mSynopsisTextView;
-    private TextView mReleaseDateTextView;
+    private ActivityDetailBinding mBinding;
+    private TrailersAdapter mTrailersAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
 
         Parcelable parcelableMovie =  getIntent().getParcelableExtra("Movie");
         Movie movie = (Movie) parcelableMovie;
 
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
-        mPosterImageView = findViewById(R.id.iv_details_poster);
-        mOriginalTitleTextView = findViewById(R.id.tv_details_original_title);
-        mUserRatingTextView = findViewById(R.id.tv_details_user_rating);
-        mSynopsisTextView = findViewById(R.id.tv_details_synopsis);
-        mReleaseDateTextView = findViewById(R.id.tv_details_release_date);
+        LinearLayoutManager layoutManager =new LinearLayoutManager(this, RecyclerView.VERTICAL,
+                false);
+
+        mBinding.rvTrailers.setLayoutManager(layoutManager);
+
+        mBinding.rvTrailers.setHasFixedSize(true);
+
+        mTrailersAdapter = new TrailersAdapter();
+
+
 
         showDetails(movie);
     }
@@ -42,9 +48,9 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        Context context = mPosterImageView.getContext();
+        Context context = mBinding.ivDetailsPoster.getContext();
         ImageUtils.loadPosterImage(context, movie.getMoviePoster(),
-                mPosterImageView);
+                mBinding.ivDetailsPoster);
 
         String originalTitle = movie.getOriginalTitle();
         Double userRating =  movie.getUserAverageRating();
@@ -52,9 +58,9 @@ public class DetailActivity extends AppCompatActivity {
         String releaseDate = movie.getReleaseDate(DetailActivity.this);
 
 
-        mOriginalTitleTextView.setText(originalTitle);
-        mUserRatingTextView.setText(userRating.toString());
-        mSynopsisTextView.setText(plotSynopsis);
-        mReleaseDateTextView.setText(releaseDate);
+        mBinding.tvDetailsOriginalTitle.setText(originalTitle);
+        mBinding.tvDetailsUserRating.setText(userRating.toString());
+        mBinding.tvDetailsSynopsis.setText(plotSynopsis);
+        mBinding.tvDetailsReleaseDate.setText(releaseDate);
     }
 }

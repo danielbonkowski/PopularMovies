@@ -54,7 +54,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(layoutIdForGridItem, parent,
-                false);
+                shouldAttachToParentImmediately);
         return new MoviesAdapterViewHolder(view);
     }
 
