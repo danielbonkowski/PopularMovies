@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 public final class NetworkUtils {
-    private static final String api_key = "ENTER_YOUR_API_KEY_HERE";
+    private static final String api_key = "58805f67e972e203a3e4cba8d3e54e00";
 
     private static final String GRID_MOVIES_URL =
             "https://api.themoviedb.org/3/movie/";
@@ -18,11 +18,19 @@ public final class NetworkUtils {
     private static final String THUMBNAIL_URL =
             "https://image.tmdb.org/t/p/";
 
+    private static final String YOUTUBE_URL =
+            "https://www.youtube.com/watch/";
+
 
     private static final String sort_popularity = "popular";
     private static final String sort_top_rated = "top_rated";
 
+    private static final String query_trailers = "videos";
+    private static final String query_reviews = "reviews";
+
     private final static String API_KEY_PARAM = "api_key";
+
+    private final static String YOUTUBE_ID_PARAM = "v";
 
 
     public static URL buildPopularityUrl(){
@@ -67,6 +75,28 @@ public final class NetworkUtils {
                 .build();
     }
 
+    public static URL buildTrailersUrl(String filmId){
+        return buildTrailersOrReviewsUrl(filmId, query_trailers);
+    }
+
+    public static URL buildReviewsUrl(String filmId){
+        return buildTrailersOrReviewsUrl(filmId, query_reviews);
+    }
+
+    private static URL buildTrailersOrReviewsUrl(String filmId, String queryType){
+        Uri builtUri = Uri.parse(GRID_MOVIES_URL).buildUpon()
+                .appendEncodedPath(filmId)
+                .appendEncodedPath(queryType)
+                .build();
+        return buildUrl(builtUri);
+    }
+
+    public static URL buildYoutubeTrailerUrl(String youtubeFilmId){
+        Uri builtUri = Uri.parse(YOUTUBE_URL).buildUpon()
+                .appendQueryParameter(YOUTUBE_ID_PARAM, youtubeFilmId)
+                .build();
+        return buildUrl(builtUri);
+    }
 
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {

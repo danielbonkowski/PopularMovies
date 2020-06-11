@@ -1,13 +1,19 @@
 package android.example.com.popularmovies;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.AsyncTaskLoader;
+import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.databinding.ActivityMainBinding;
 import android.example.com.popularmovies.utilities.ImageUtils;
 import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
@@ -29,41 +35,38 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler, AdapterView.OnItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements
+        MoviesAdapter.MoviesAdapterOnClickHandler,
+        AdapterView.OnItemSelectedListener,
+        LoaderManager.LoaderCallbacks<String>{
 
     private final int SORT_POPULARITY = 0;
     private final int SORT_TOP_RATED = 1;
+    private final int SORT_FAVOURITES = 2;
 
-    private RecyclerView mRecyclerView;
     private MoviesAdapter mMoviesAdapter;
 
-    private TextView mErrorMessageDisplay;
-    private ProgressBar mLoadingIndicator;
-
     private int mSortSpinnerPosition = 0;
+
+    private ActivityMainBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
         int columnsSpan = ImageUtils.calculateNrOfColumns(MainActivity.this);
 
-        mRecyclerView = findViewById(R.id.recyclerview_movies);
-
-        mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
-
-        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
-
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, columnsSpan);
 
-        mRecyclerView.setLayoutManager(layoutManager);
+        mBinding.recyclerviewMovies.setLayoutManager(layoutManager);
 
-        mRecyclerView.setHasFixedSize(true);
+        mBinding.recyclerviewMovies.setHasFixedSize(true);
 
         mMoviesAdapter = new MoviesAdapter(this);
 
-        mRecyclerView.setAdapter(mMoviesAdapter);
+        mBinding.recyclerviewMovies.setAdapter(mMoviesAdapter);
 
         if(savedInstanceState == null || !savedInstanceState.containsKey("movies")){
             fetchMostPopularMovies();
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 return;
             }
             mMoviesAdapter.setMoviesData(movies);
-            mRecyclerView.setAdapter(mMoviesAdapter);
+            mBinding.recyclerviewMovies.setAdapter(mMoviesAdapter);
 
             mSortSpinnerPosition = savedInstanceState.getInt("spinnerPosition");
         }
@@ -95,13 +98,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     }
 
     private void showMoviesDataView() {
-        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-        mRecyclerView.setVisibility(View.VISIBLE);
+        mBinding.tvErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        mBinding.recyclerviewMovies.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage(){
-        mRecyclerView.setVisibility(View.INVISIBLE);
-        mErrorMessageDisplay.setVisibility(View.VISIBLE);
+        mBinding.recyclerviewMovies.setVisibility(View.INVISIBLE);
+        mBinding.tvErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -178,12 +181,34 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     }
 
+    @NonNull
+    @Override
+    public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
+        return new AsyncTaskLoader<String>(this){
+            @Nullable
+            @Override
+            public String loadInBackground() {
+                return null;
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<String> loader) {
+
+    }
+
     class FetchMoviesTask extends AsyncTask<Integer, Void, List<Movie>>{
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
+            mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -213,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         @Override
         protected void onPostExecute(List<Movie> moviesData) {
             super.onPostExecute(moviesData);
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
 
             if(moviesData != null){
                 showMoviesDataView();
