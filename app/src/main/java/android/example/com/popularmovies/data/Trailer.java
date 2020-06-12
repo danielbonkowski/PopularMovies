@@ -5,17 +5,17 @@ public class Trailer {
     private final String id;
     private final String key;
     private final String name;
-    private final String playbackSite;
-    private final String maxVideoQuality;
+    private final String site;
+    private final int maxVideoQuality;
     private final String type;
 
 
     public Trailer(String id, String key, String name,
-                   String playbackSite, String maxVideoQuality, String type) {
+                   String site, int maxVideoQuality, String type) {
         this.id = id;
         this.key = key;
         this.name = name;
-        this.playbackSite = playbackSite;
+        this.site = site;
         this.maxVideoQuality = maxVideoQuality;
         this.type = type;
     }
@@ -32,15 +32,20 @@ public class Trailer {
         return name;
     }
 
-    public String getPlaybackSite() {
-        return playbackSite;
+    public String getSite() {
+        return site;
     }
 
-    public String getMaxVideoQuality() {
+    public int getMaxVideoQuality() {
         return maxVideoQuality;
     }
 
     public String getType() {
         return type;
+    }
+
+    public String toString(){
+        return String.format("Id: %s key: %s name: %s \n" +
+                "site: %s quality: %d type: %s", id, key, name, site, maxVideoQuality, type);
     }
 }

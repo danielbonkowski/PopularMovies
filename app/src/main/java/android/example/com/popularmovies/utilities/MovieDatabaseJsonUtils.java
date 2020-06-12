@@ -1,6 +1,8 @@
 package android.example.com.popularmovies.utilities;
 
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.data.Trailer;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 
 public class MovieDatabaseJsonUtils {
+
+    private static String TAG = MovieDatabaseJsonUtils.class.getSimpleName();
 
     public static List<Movie> getMovieObjectsFromJson(String moviesJsonStr) throws JSONException {
 
@@ -55,5 +59,57 @@ public class MovieDatabaseJsonUtils {
         }
 
         return parsedMoviesObjects;
+    }
+
+    public static List<Trailer> getTrailerObjectsFromJson(String trailersJsonStr) throws JSONException{
+
+        final String MDB_RESULTS = "results";
+
+        final String MDB_ID = "id";
+        final String MDB_KEY = "key";
+        final String MDB_NAME = "name";
+        final String MDB_SITE = "site";
+        final String MDB_MAX_VIDEO_QUALITY = "size";
+        final String MDB_TYPE = "type";
+
+        final String TRAILER_TYPE = "Trailer";
+
+        List<Trailer> parsedTrailersObjects = new ArrayList<>();
+
+        JSONObject trailersJson = new JSONObject(trailersJsonStr);
+
+        JSONArray resultsArray = trailersJson.getJSONArray(MDB_RESULTS);
+
+        Log.v(TAG, "My resultsArray: " + resultsArray.toString());
+
+        for(int i = 0; i < resultsArray.length(); i++){
+            JSONObject jsonObject = resultsArray.getJSONObject(i);
+
+            String type = jsonObject.getString(MDB_TYPE);
+
+
+            //Discards clips and only accepts trailers
+            if(!type.equals(TRAILER_TYPE)){
+                continue;
+            }
+
+            Log.v(TAG,  "My type: " + type);
+
+            String id = jsonObject.getString(MDB_ID);
+            String key = jsonObject.getString(MDB_KEY);
+            String name = jsonObject.getString(MDB_NAME);
+            String site = jsonObject.getString(MDB_SITE);
+            int size = jsonObject.getInt(MDB_MAX_VIDEO_QUALITY);
+
+
+            Trailer trailer = new Trailer(id, key, name, site,
+                    size, type);
+
+            parsedTrailersObjects.add(trailer);
+            Log.v(TAG,  "My trailer: " + trailer.toString());
+        }
+
+
+        return parsedTrailersObjects;
     }
 }

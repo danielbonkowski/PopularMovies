@@ -1,23 +1,119 @@
 package android.example.com.popularmovies;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.AsyncTaskLoader;
+import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.data.Trailer;
 import android.example.com.popularmovies.databinding.ActivityDetailBinding;
 import android.example.com.popularmovies.utilities.ImageUtils;
+import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
+import android.example.com.popularmovies.utilities.NetworkUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.util.Log;
+import android.view.View;
 
-public class DetailActivity extends AppCompatActivity {
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+
+public class DetailActivity extends AppCompatActivity implements
+        TrailersAdapter.TrailersAdapterOnClickHandler {
+
+    private static final String TAG = DetailActivity.class.getSimpleName();
+
+    private static final int TRAILERS_LOADER_ID = 10;
+    private static final int REVIEWS_LOADER_ID = 20;
+
+    private static final String SEARCH_QUERY_TRAILERS_EXTRA = "id_query";
 
     private ActivityDetailBinding mBinding;
     private TrailersAdapter mTrailersAdapter;
+
+    private LoaderManager.LoaderCallbacks<List<Trailer>> trailersResultsLoaderListener =
+            new LoaderManager.LoaderCallbacks<List<Trailer>>() {
+                @NonNull
+                @Override
+                public Loader<List<Trailer>> onCreateLoader(int id, @Nullable final Bundle bundle) {
+                    return new AsyncTaskLoader<List<Trailer>>(getApplicationContext()) {
+
+                        @Override
+                        protected void onStartLoading() {
+                            super.onStartLoading();
+
+                            if(bundle == null){
+                                return;
+                            }
+
+                            mBinding.pbTrailers.setVisibility(View.VISIBLE);
+
+                            forceLoad();
+                        }
+
+                        @Nullable
+                        @Override
+                        public List<Trailer> loadInBackground() {
+                            String trailersQueryUrlString = bundle.getString(SEARCH_QUERY_TRAILERS_EXTRA);
+
+                            if(trailersQueryUrlString == null || trailersQueryUrlString.isEmpty()){
+                                return null;
+                            }
+
+                            String jsonTrailersResults = null;
+                            try{
+                                URL trailersUrl = new URL(trailersQueryUrlString);
+
+                                Log.v(TAG, "My URL: " + trailersUrl.toString());
+
+                                jsonTrailersResults = NetworkUtils.getResponseFromHttpUrl(trailersUrl);
+
+                                Log.v(TAG, "My JSON: " + jsonTrailersResults);
+
+                                return MovieDatabaseJsonUtils.getTrailerObjectsFromJson(jsonTrailersResults);
+
+                            } catch (IOException | JSONException e) {
+                                e.printStackTrace();
+                                return null;
+                            }
+
+                        }
+                    };
+                }
+
+                @Override
+                public void onLoadFinished(@NonNull Loader<List<Trailer>> loader, List<Trailer> data) {
+                    mBinding.pbTrailers.setVisibility(View.INVISIBLE);
+
+                    Log.v(TAG, "My data: " + data.toString());
+                    if(data != null){
+                        showTrailersDataView();
+                        mTrailersAdapter.setTrailersData(data);
+                    }else{
+                        showTrailersErrorMessage();
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(@NonNull Loader<List<Trailer>> loader) {
+
+                }
+            };
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +131,34 @@ public class DetailActivity extends AppCompatActivity {
 
         mBinding.rvTrailers.setHasFixedSize(true);
 
-        mTrailersAdapter = new TrailersAdapter();
+        mTrailersAdapter = new TrailersAdapter(this);
+
+        mBinding.rvTrailers.setAdapter(mTrailersAdapter);
 
 
-
+        String movieId = String.valueOf(movie.getMovieId());
+        makeTrailersSearchQuery(movieId);
         showDetails(movie);
+    }
+
+    private void showTrailersDataView(){
+        mBinding.rvTrailers.setVisibility(View.VISIBLE);
+        mBinding.tvErrorTrailers.setVisibility(View.INVISIBLE);
+    }
+
+    private void showTrailersErrorMessage(){
+        mBinding.tvErrorTrailers.setVisibility(View.VISIBLE);
+        mBinding.rvTrailers.setVisibility(View.INVISIBLE);
+    }
+
+    private void showReviewsDataView(){
+        mBinding.rvReviews.setVisibility(View.VISIBLE);
+        mBinding.tvErrorReviews.setVisibility(View.INVISIBLE);
+    }
+
+    private void showReviewsErrorMessage(){
+        mBinding.tvErrorReviews.setVisibility(View.VISIBLE);
+        mBinding.rvReviews.setVisibility(View.INVISIBLE);
     }
 
     private void showDetails(Movie movie){
@@ -62,5 +181,34 @@ public class DetailActivity extends AppCompatActivity {
         mBinding.tvDetailsUserRating.setText(userRating.toString());
         mBinding.tvDetailsSynopsis.setText(plotSynopsis);
         mBinding.tvDetailsReleaseDate.setText(releaseDate);
+    }
+
+    private void makeTrailersSearchQuery(String filmId){
+
+        URL trailersSearchUrl = NetworkUtils.buildTrailersUrl(filmId);
+
+        Bundle queryBundle = new Bundle();
+        queryBundle.putString(SEARCH_QUERY_TRAILERS_EXTRA, trailersSearchUrl.toString());
+
+        LoaderManager loaderManager =  getSupportLoaderManager();
+        Loader<List<Trailer>> loader = loaderManager.getLoader(TRAILERS_LOADER_ID);
+
+        if(loader == null){
+            loaderManager.initLoader(TRAILERS_LOADER_ID, queryBundle, trailersResultsLoaderListener);
+        }else{
+            loaderManager.restartLoader(TRAILERS_LOADER_ID, queryBundle, trailersResultsLoaderListener);
+        }
+    }
+
+    @Override
+    public void onClick(Trailer trailer) {
+        Log.v("HERE", "I clicked it");
+        Context context = this;
+        Uri youtubeUrl = NetworkUtils.buildYoutubeTrailerUrl(trailer.getKey());
+        Intent showTrailerIntent = new Intent(Intent.ACTION_VIEW, youtubeUrl);
+
+        if(showTrailerIntent.resolveActivity(getPackageManager()) != null){
+            startActivity(showTrailerIntent);
+        }
     }
 }

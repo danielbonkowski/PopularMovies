@@ -87,15 +87,16 @@ public final class NetworkUtils {
         Uri builtUri = Uri.parse(GRID_MOVIES_URL).buildUpon()
                 .appendEncodedPath(filmId)
                 .appendEncodedPath(queryType)
+                .appendQueryParameter(API_KEY_PARAM, api_key)
                 .build();
         return buildUrl(builtUri);
     }
 
-    public static URL buildYoutubeTrailerUrl(String youtubeFilmId){
+    public static Uri buildYoutubeTrailerUrl(String youtubeFilmId){
         Uri builtUri = Uri.parse(YOUTUBE_URL).buildUpon()
                 .appendQueryParameter(YOUTUBE_ID_PARAM, youtubeFilmId)
                 .build();
-        return buildUrl(builtUri);
+        return builtUri;
     }
 
 

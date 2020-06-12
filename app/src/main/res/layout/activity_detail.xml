@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".DetailActivity">
@@ -34,13 +34,10 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/barrier"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/barrier" />
 
         <TextView
             android:id="@+id/tv_details_original_title"
@@ -137,15 +134,15 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_trailers"
             android:layout_width="0dp"
-            android:layout_height="116dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_details_synopsis" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_trailers_label" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_reviews"
@@ -159,6 +156,61 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rv_trailers" />
+
+        <ProgressBar
+            android:id="@+id/pb_trailers"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_trailers"
+            app:layout_constraintEnd_toEndOf="@+id/rv_trailers"
+            app:layout_constraintStart_toStartOf="@+id/rv_trailers"
+            app:layout_constraintTop_toTopOf="@+id/rv_trailers" />
+
+        <ProgressBar
+            android:id="@+id/pb_reviews"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_reviews"
+            app:layout_constraintEnd_toEndOf="@+id/rv_reviews"
+            app:layout_constraintStart_toStartOf="@+id/rv_reviews"
+            app:layout_constraintTop_toTopOf="@+id/rv_reviews" />
+
+        <TextView
+            android:id="@+id/tv_error_trailers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trailers_error_message"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_trailers"
+            app:layout_constraintEnd_toEndOf="@+id/rv_trailers"
+            app:layout_constraintStart_toStartOf="@+id/rv_trailers"
+            app:layout_constraintTop_toBottomOf="@+id/tv_details_synopsis" />
+
+        <TextView
+            android:id="@+id/tv_error_reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_reviews"
+            app:layout_constraintEnd_toEndOf="@+id/rv_reviews"
+            app:layout_constraintStart_toStartOf="@+id/rv_reviews"
+            app:layout_constraintTop_toBottomOf="@+id/rv_trailers" />
+
+        <TextView
+            android:id="@+id/tv_trailers_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
+            android:text="@string/trailers_label"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_details_synopsis" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

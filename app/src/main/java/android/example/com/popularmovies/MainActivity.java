@@ -97,6 +97,11 @@ public class MainActivity extends AppCompatActivity implements
         new FetchMoviesTask().execute(SORT_TOP_RATED);
     }
 
+    private void fetchFavouriteMovies(){
+        showMoviesDataView();
+        // TODO get films from the database
+    }
+
     private void showMoviesDataView() {
         mBinding.tvErrorMessageDisplay.setVisibility(View.INVISIBLE);
         mBinding.recyclerviewMovies.setVisibility(View.VISIBLE);

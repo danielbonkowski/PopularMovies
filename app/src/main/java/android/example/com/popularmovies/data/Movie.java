@@ -12,6 +12,8 @@ import java.util.Date;
 
 public class Movie implements Parcelable {
 
+
+
     private final int movieId;
     private final String originalTitle;
     private final String moviePoster;
@@ -50,6 +52,8 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    public int getMovieId() { return movieId; }
 
     public String getOriginalTitle() {
         return originalTitle;
