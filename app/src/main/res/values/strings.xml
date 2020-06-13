@@ -9,6 +9,8 @@
     <string name="unknown_release_date">unknown</string>
     <string name="trailers_label">Trailers</string>
     <string name="trailers_error_message">No trailers found</string>
+    <string name="reviews_label">Reviews</string>
+    <string name="reviews_error_message">No reviews found</string>
 
     <string-array name="sort_array">
         <item>Most popular</item>

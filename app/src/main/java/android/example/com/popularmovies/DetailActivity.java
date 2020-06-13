@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.data.Review;
 import android.example.com.popularmovies.data.Trailer;
 import android.example.com.popularmovies.databinding.ActivityDetailBinding;
 import android.example.com.popularmovies.utilities.ImageUtils;
@@ -31,17 +32,18 @@ import java.net.URL;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements
-        TrailersAdapter.TrailersAdapterOnClickHandler {
+        TrailersAdapter.TrailersAdapterOnClickHandler{
 
     private static final String TAG = DetailActivity.class.getSimpleName();
 
     private static final int TRAILERS_LOADER_ID = 10;
     private static final int REVIEWS_LOADER_ID = 20;
 
-    private static final String SEARCH_QUERY_TRAILERS_EXTRA = "id_query";
+    private static final String SEARCH_QUERY_EXTRA = "id_query";
 
     private ActivityDetailBinding mBinding;
     private TrailersAdapter mTrailersAdapter;
+    private ReviewsAdapter mReviewsAdapter;
 
     private LoaderManager.LoaderCallbacks<List<Trailer>> trailersResultsLoaderListener =
             new LoaderManager.LoaderCallbacks<List<Trailer>>() {
@@ -66,7 +68,7 @@ public class DetailActivity extends AppCompatActivity implements
                         @Nullable
                         @Override
                         public List<Trailer> loadInBackground() {
-                            String trailersQueryUrlString = bundle.getString(SEARCH_QUERY_TRAILERS_EXTRA);
+                            String trailersQueryUrlString = bundle.getString(SEARCH_QUERY_EXTRA);
 
                             if(trailersQueryUrlString == null || trailersQueryUrlString.isEmpty()){
                                 return null;
@@ -112,6 +114,71 @@ public class DetailActivity extends AppCompatActivity implements
                 }
             };
 
+    private LoaderManager.LoaderCallbacks<List<Review>> reviewsResultsLoaderListener =
+            new LoaderManager.LoaderCallbacks<List<Review>>() {
+                @NonNull
+                @Override
+                public Loader<List<Review>> onCreateLoader(int id, @Nullable final Bundle bundle) {
+                    return new AsyncTaskLoader<List<Review>>(getApplicationContext()) {
+
+                        @Override
+                        protected void onStartLoading() {
+
+                            if (bundle == null){
+                                return;
+                            }
+
+                            mBinding.pbReviews.setVisibility(View.VISIBLE);
+
+                            forceLoad();
+                        }
+
+                        @Nullable
+                        @Override
+                        public List<Review> loadInBackground() {
+
+                            String reviewsQueryUrlString = bundle.getString(SEARCH_QUERY_EXTRA);
+
+                            if(reviewsQueryUrlString == null || reviewsQueryUrlString.isEmpty()){
+                                return null;
+                            }
+
+                            String jsonReviewsResults = null;
+                            try{
+                                URL reviewsUrl = new URL(reviewsQueryUrlString);
+
+                                jsonReviewsResults = NetworkUtils.getResponseFromHttpUrl(reviewsUrl);
+
+
+                                return MovieDatabaseJsonUtils.getReviewObjectsFromJson(jsonReviewsResults);
+
+                            } catch (IOException | JSONException e) {
+                                e.printStackTrace();
+                                return null;
+                            }
+                        }
+                    };
+                }
+
+                @Override
+                public void onLoadFinished(@NonNull Loader<List<Review>> loader, List<Review> data) {
+                    mBinding.pbReviews.setVisibility(View.INVISIBLE);
+
+                    if(data != null){
+                        showReviewsDataView();
+                        mReviewsAdapter.setReviewsData(data);
+                    }else{
+                        showReviewsErrorMessage();
+                    }
+
+
+                }
+
+                @Override
+                public void onLoaderReset(@NonNull Loader<List<Review>> loader) {
+
+                }
+            };
 
 
 
@@ -124,20 +191,30 @@ public class DetailActivity extends AppCompatActivity implements
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
-        LinearLayoutManager layoutManager =new LinearLayoutManager(this, RecyclerView.VERTICAL,
+        LinearLayoutManager trailersLayoutManager =new LinearLayoutManager(this, RecyclerView.VERTICAL,
                 false);
-
-        mBinding.rvTrailers.setLayoutManager(layoutManager);
-
+        mBinding.rvTrailers.setLayoutManager(trailersLayoutManager);
         mBinding.rvTrailers.setHasFixedSize(true);
-
         mTrailersAdapter = new TrailersAdapter(this);
-
         mBinding.rvTrailers.setAdapter(mTrailersAdapter);
 
+        LinearLayoutManager reviewsLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL,
+                false);
+        mBinding.rvReviews.setLayoutManager(reviewsLayoutManager);
+        mBinding.rvReviews.setHasFixedSize(true);
+        mReviewsAdapter = new ReviewsAdapter();
+        mBinding.rvReviews.setAdapter(mReviewsAdapter);
 
+
+        loadAllDetails(movie);
+
+    }
+
+    private void loadAllDetails(Movie movie){
         String movieId = String.valueOf(movie.getMovieId());
-        makeTrailersSearchQuery(movieId);
+
+        loadTrailers(movieId);
+        loadReviews(movieId);
         showDetails(movie);
     }
 
@@ -183,12 +260,12 @@ public class DetailActivity extends AppCompatActivity implements
         mBinding.tvDetailsReleaseDate.setText(releaseDate);
     }
 
-    private void makeTrailersSearchQuery(String filmId){
+    private void loadTrailers(String filmId){
 
         URL trailersSearchUrl = NetworkUtils.buildTrailersUrl(filmId);
 
         Bundle queryBundle = new Bundle();
-        queryBundle.putString(SEARCH_QUERY_TRAILERS_EXTRA, trailersSearchUrl.toString());
+        queryBundle.putString(SEARCH_QUERY_EXTRA, trailersSearchUrl.toString());
 
         LoaderManager loaderManager =  getSupportLoaderManager();
         Loader<List<Trailer>> loader = loaderManager.getLoader(TRAILERS_LOADER_ID);
@@ -198,6 +275,25 @@ public class DetailActivity extends AppCompatActivity implements
         }else{
             loaderManager.restartLoader(TRAILERS_LOADER_ID, queryBundle, trailersResultsLoaderListener);
         }
+    }
+
+
+    private void loadReviews(String filmId){
+
+        URL reviewsSearchUrl = NetworkUtils.buildReviewsUrl(filmId);
+
+        Bundle queryBundle = new Bundle();
+        queryBundle.putString(SEARCH_QUERY_EXTRA, reviewsSearchUrl.toString());
+
+        LoaderManager loaderManager = getSupportLoaderManager();
+        Loader<List<Review>> loader = loaderManager.getLoader(REVIEWS_LOADER_ID);
+
+        if(loader == null){
+            loaderManager.initLoader(REVIEWS_LOADER_ID, queryBundle, reviewsResultsLoaderListener);
+        }else{
+            loaderManager.restartLoader(REVIEWS_LOADER_ID, queryBundle, reviewsResultsLoaderListener);
+        }
+
     }
 
     @Override
@@ -211,4 +307,5 @@ public class DetailActivity extends AppCompatActivity implements
             startActivity(showTrailerIntent);
         }
     }
+
 }

@@ -66,7 +66,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_details_poster"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_original_title_label" />
 
         <TextView
             android:id="@+id/tv_details_release_date"
@@ -81,10 +81,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/iv_details_poster"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_user_rating_label" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_original_title_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -97,7 +97,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_details_original_title" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tv_user_rating_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -110,7 +110,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_details_user_rating" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/tv_release_date_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -128,7 +128,7 @@
             android:layout_height="wrap_content"
             app:barrierAllowsGoneWidgets="false"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="textView3,iv_details_poster"
+            app:constraint_referenced_ids="tv_release_date_label,iv_details_poster"
             tools:layout_editor_absoluteY="232dp" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -147,15 +147,17 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_reviews"
             android:layout_width="0dp"
-            android:layout_height="232dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_trailers" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_reviews_label" />
 
         <ProgressBar
             android:id="@+id/pb_trailers"
@@ -191,7 +193,7 @@
             android:id="@+id/tv_error_reviews"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="@string/reviews_error_message"
             app:layout_constraintBottom_toBottomOf="@+id/rv_reviews"
             app:layout_constraintEnd_toEndOf="@+id/rv_reviews"
             app:layout_constraintStart_toStartOf="@+id/rv_reviews"
@@ -211,6 +213,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_details_synopsis" />
+
+        <TextView
+            android:id="@+id/tv_reviews_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
+            android:text="@string/reviews_label"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_trailers" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

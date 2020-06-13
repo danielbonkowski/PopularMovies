@@ -57,6 +57,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     @Override
     public void onBindViewHolder(@NonNull TrailersAdapterViewHolder holder, int position) {
             Trailer singleTrailerData =  mTrailersData.get(position);
+
             holder.mTrailerNameTextView.setText(singleTrailerData.getName());
     }
 
@@ -74,7 +75,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
 
         public TrailersAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
-            Context context = itemView.getContext();
+
             mTrailerNameTextView = itemView.findViewById(R.id.tv_trailer_name);
 
             itemView.setOnClickListener(this);

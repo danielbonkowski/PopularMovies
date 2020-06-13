@@ -1,6 +1,7 @@
 package android.example.com.popularmovies.utilities;
 
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.data.Review;
 import android.example.com.popularmovies.data.Trailer;
 import android.util.Log;
 
@@ -83,9 +84,9 @@ public class MovieDatabaseJsonUtils {
         Log.v(TAG, "My resultsArray: " + resultsArray.toString());
 
         for(int i = 0; i < resultsArray.length(); i++){
-            JSONObject jsonObject = resultsArray.getJSONObject(i);
+            JSONObject trailerJsonObject = resultsArray.getJSONObject(i);
 
-            String type = jsonObject.getString(MDB_TYPE);
+            String type = trailerJsonObject.getString(MDB_TYPE);
 
 
             //Discards clips and only accepts trailers
@@ -95,11 +96,11 @@ public class MovieDatabaseJsonUtils {
 
             Log.v(TAG,  "My type: " + type);
 
-            String id = jsonObject.getString(MDB_ID);
-            String key = jsonObject.getString(MDB_KEY);
-            String name = jsonObject.getString(MDB_NAME);
-            String site = jsonObject.getString(MDB_SITE);
-            int size = jsonObject.getInt(MDB_MAX_VIDEO_QUALITY);
+            String id = trailerJsonObject.getString(MDB_ID);
+            String key = trailerJsonObject.getString(MDB_KEY);
+            String name = trailerJsonObject.getString(MDB_NAME);
+            String site = trailerJsonObject.getString(MDB_SITE);
+            int size = trailerJsonObject.getInt(MDB_MAX_VIDEO_QUALITY);
 
 
             Trailer trailer = new Trailer(id, key, name, site,
@@ -111,5 +112,41 @@ public class MovieDatabaseJsonUtils {
 
 
         return parsedTrailersObjects;
+    }
+
+
+    public static List<Review> getReviewObjectsFromJson(String reviewsJsonStr) throws JSONException {
+
+        final String MDB_FILM_ID = "id";
+        final String MDB_RESULTS = "results";
+
+        final String MDB_REVIEW_ID = "id";
+        final String MDB_AUTHOR = "author";
+        final String MDB_CONTENT = "content";
+        final String MDB_URL = "url";
+
+        List<Review> parsedReviewsObjects = new ArrayList<>();
+
+        JSONObject reviewsJson = new JSONObject(reviewsJsonStr);
+
+        //int filmId = reviewsJson.getInt(MDB_FILM_ID);
+        JSONArray resultsArray = reviewsJson.getJSONArray(MDB_RESULTS);
+
+        for(int i = 0 ; i < resultsArray.length(); i++){
+            JSONObject reviewJsonObject = resultsArray.getJSONObject(i);
+
+            String author = reviewJsonObject.getString(MDB_AUTHOR);
+            String content = reviewJsonObject.getString(MDB_CONTENT);
+            String id = reviewJsonObject.getString(MDB_REVIEW_ID);
+            String url = reviewJsonObject.getString(MDB_URL);
+
+
+            Review review = new Review(id, author, content, url);
+
+            parsedReviewsObjects.add(review);
+            Log.v(TAG,  "My trailer: " + review.toString());
+        }
+
+        return parsedReviewsObjects;
     }
 }

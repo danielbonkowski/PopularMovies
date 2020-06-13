@@ -29,4 +29,9 @@ public class Review {
     public String getUrl() {
         return url;
     }
+
+    public String toString(){
+        return String.format("Review id: %s, Url: %s, Author: %s \nContent: %s",
+                id, url, author, content);
+    }
 }
