@@ -64,9 +64,10 @@ public class MovieDatabaseJsonUtils {
 
     public static List<Trailer> getTrailerObjectsFromJson(String trailersJsonStr) throws JSONException{
 
+        final String MDB_FILM_ID = "id";
         final String MDB_RESULTS = "results";
 
-        final String MDB_ID = "id";
+        final String TRAILER_ID = "id";
         final String MDB_KEY = "key";
         final String MDB_NAME = "name";
         final String MDB_SITE = "site";
@@ -79,6 +80,7 @@ public class MovieDatabaseJsonUtils {
 
         JSONObject trailersJson = new JSONObject(trailersJsonStr);
 
+        int filmId = trailersJson.getInt(MDB_FILM_ID);
         JSONArray resultsArray = trailersJson.getJSONArray(MDB_RESULTS);
 
         Log.v(TAG, "My resultsArray: " + resultsArray.toString());
@@ -96,14 +98,14 @@ public class MovieDatabaseJsonUtils {
 
             Log.v(TAG,  "My type: " + type);
 
-            String id = trailerJsonObject.getString(MDB_ID);
+            String id = trailerJsonObject.getString(TRAILER_ID);
             String key = trailerJsonObject.getString(MDB_KEY);
             String name = trailerJsonObject.getString(MDB_NAME);
             String site = trailerJsonObject.getString(MDB_SITE);
             int size = trailerJsonObject.getInt(MDB_MAX_VIDEO_QUALITY);
 
 
-            Trailer trailer = new Trailer(id, key, name, site,
+            Trailer trailer = new Trailer(filmId, id, key, name, site,
                     size, type);
 
             parsedTrailersObjects.add(trailer);
@@ -129,7 +131,7 @@ public class MovieDatabaseJsonUtils {
 
         JSONObject reviewsJson = new JSONObject(reviewsJsonStr);
 
-        //int filmId = reviewsJson.getInt(MDB_FILM_ID);
+        int filmId = reviewsJson.getInt(MDB_FILM_ID);
         JSONArray resultsArray = reviewsJson.getJSONArray(MDB_RESULTS);
 
         for(int i = 0 ; i < resultsArray.length(); i++){
@@ -141,7 +143,7 @@ public class MovieDatabaseJsonUtils {
             String url = reviewJsonObject.getString(MDB_URL);
 
 
-            Review review = new Review(id, author, content, url);
+            Review review = new Review(filmId, id, author, content, url);
 
             parsedReviewsObjects.add(review);
             Log.v(TAG,  "My trailer: " + review.toString());
