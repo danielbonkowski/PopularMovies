@@ -45,13 +45,14 @@ public class MovieDatabaseJsonUtils {
             String moviePoster = resultObject.getString(MDB_MOVIE_POSTER);
             String plotSynopsis = resultObject.getString(MDB_PLOT_SYNOPSIS);
             Double userAverageRating = resultObject.getDouble(MDB_USER_AVERAGE_RATING);
-            String dateString = resultObject.getString(MDB_RELEASE_DATE);
 
             Date releaseDate = null;
             try {
+                String dateString = resultObject.getString(MDB_RELEASE_DATE);
                 releaseDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
-            }catch (ParseException e){
+            }catch (ParseException | JSONException e){
                 e.getStackTrace();
+                Log.d(TAG, "Error" + e.getMessage());
             }
 
             Movie movie = new Movie(movieId, originalTitle, moviePoster,

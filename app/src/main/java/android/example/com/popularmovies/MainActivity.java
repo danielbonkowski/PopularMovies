@@ -4,14 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.example.com.popularmovies.data.AppDatabase;
 import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.databinding.ActivityMainBinding;
 import android.example.com.popularmovies.utilities.ImageUtils;
@@ -19,15 +21,14 @@ import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import org.json.JSONException;
 
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener,
         LoaderManager.LoaderCallbacks<String>{
 
+    private final String TAG = MainActivity.class.getSimpleName();
+
     private final int SORT_POPULARITY = 0;
     private final int SORT_TOP_RATED = 1;
     private final int SORT_FAVOURITES = 2;
@@ -50,9 +53,15 @@ public class MainActivity extends AppCompatActivity implements
 
     private ActivityMainBinding mBinding;
 
+    private AppDatabase mDb;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mDb = AppDatabase.getInstance(getApplicationContext());
+        setupFavoritesViewModel();
 
         int columnsSpan = ImageUtils.calculateNrOfColumns(MainActivity.this);
 
@@ -97,9 +106,23 @@ public class MainActivity extends AppCompatActivity implements
         new FetchMoviesTask().execute(SORT_TOP_RATED);
     }
 
-    private void fetchFavouriteMovies(){
-        showMoviesDataView();
-        // TODO get films from the database
+    private void setupFavoritesViewModel(){
+
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(List<Movie> movies) {
+                Log.d(TAG, "Updating list of movies from LiveData in ViewModel");
+                mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
+
+                if(movies != null){
+                    showMoviesDataView();
+                    mMoviesAdapter.setMoviesData(movies);
+                }else{
+                    showErrorMessage();
+                }
+            }
+        });
     }
 
     private void showMoviesDataView() {
@@ -176,7 +199,10 @@ public class MainActivity extends AppCompatActivity implements
             fetchMostPopularMovies();
         }else if(mSortSpinnerPosition == SORT_TOP_RATED){
             fetchTopRatedMovies();
-        }else{
+        }else if(mSortSpinnerPosition == SORT_FAVOURITES){
+
+        }
+        else{
             showErrorMessage();
         }
     }
@@ -219,6 +245,8 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         protected List<Movie> doInBackground(Integer... params) {
 
+
+
             if(params.length == 0){
                 return null;
             }
@@ -235,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements
 
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
+                Log.d(TAG, "Error: " + e.getMessage());
                 return null;
             }
 
@@ -244,6 +273,7 @@ public class MainActivity extends AppCompatActivity implements
         protected void onPostExecute(List<Movie> moviesData) {
             super.onPostExecute(moviesData);
             mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
+
 
             if(moviesData != null){
                 showMoviesDataView();

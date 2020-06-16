@@ -6,19 +6,24 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import java.text.DateFormat;
 import java.util.Date;
 
+@Entity(tableName = "movie")
 public class Movie implements Parcelable {
 
 
-
+    @PrimaryKey
     private final int movieId;
     private final String originalTitle;
     private final String moviePoster;
     private final String plotSynopsis;
     private final Double userAverageRating;
+
     private final Date releaseDate;
 
     public Movie(int movieId, String originalTitle, String moviePoster,
@@ -31,7 +36,7 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
-
+    @Ignore
     private Movie(Parcel in) {
         movieId = in.readInt();
         originalTitle = in.readString();
@@ -79,6 +84,10 @@ public class Movie implements Parcelable {
         }
 
         return date;
+    }
+
+    public Date getReleaseDate() {
+        return releaseDate;
     }
 
     private String formatDate(Context context){

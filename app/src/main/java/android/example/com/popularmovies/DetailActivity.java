@@ -4,6 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
@@ -12,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.example.com.popularmovies.data.AppDatabase;
 import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.data.Review;
 import android.example.com.popularmovies.data.Trailer;
@@ -41,9 +46,14 @@ public class DetailActivity extends AppCompatActivity implements
 
     private static final String SEARCH_QUERY_EXTRA = "id_query";
 
+    Movie movie = null;
+    boolean isFavourite = true;
+
     private ActivityDetailBinding mBinding;
     private TrailersAdapter mTrailersAdapter;
     private ReviewsAdapter mReviewsAdapter;
+
+    private AppDatabase mDb;
 
     private LoaderManager.LoaderCallbacks<List<Trailer>> trailersResultsLoaderListener =
             new LoaderManager.LoaderCallbacks<List<Trailer>>() {
@@ -99,7 +109,6 @@ public class DetailActivity extends AppCompatActivity implements
                 public void onLoadFinished(@NonNull Loader<List<Trailer>> loader, List<Trailer> data) {
                     mBinding.pbTrailers.setVisibility(View.INVISIBLE);
 
-                    Log.v(TAG, "My data: " + data.toString());
                     if(data != null){
                         showTrailersDataView();
                         mTrailersAdapter.setTrailersData(data);
@@ -187,7 +196,10 @@ public class DetailActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         Parcelable parcelableMovie =  getIntent().getParcelableExtra("Movie");
-        Movie movie = (Movie) parcelableMovie;
+        movie = (Movie) parcelableMovie;
+
+        mDb = AppDatabase.getInstance(getApplicationContext());
+        checkIfFavourite();
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
@@ -210,12 +222,31 @@ public class DetailActivity extends AppCompatActivity implements
 
     }
 
+
     private void loadAllDetails(Movie movie){
         String movieId = String.valueOf(movie.getMovieId());
 
         loadTrailers(movieId);
         loadReviews(movieId);
         showDetails(movie);
+    }
+
+    private void checkIfFavourite() {
+
+        CheckMovieViewModelFactory factory = new CheckMovieViewModelFactory(mDb, movie.getMovieId());
+        final CheckMovieViewModel viewModel = ViewModelProviders.of(this, factory).get(CheckMovieViewModel.class);
+        viewModel.getMovie().observe(this, new Observer<Movie>() {
+            @Override
+            public void onChanged(Movie movie) {
+                viewModel.getMovie().removeObserver(this);
+                Log.d(TAG, "Receiving database update from LiveData");
+                if (movie == null){
+                    displayNotFavoriteIcon();
+                }else{
+                    displayFavoriteIcon();
+                }
+            }
+        });
     }
 
     private void showTrailersDataView(){
@@ -308,4 +339,44 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
+
+
+    public void starClick(View view) {
+
+        if(isFavourite){
+            removeFromFavorites();
+        }else{
+            addToFavorites();
+        }
+    }
+
+    private void addToFavorites() {
+        displayFavoriteIcon();
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.movieDao().insertMovie(movie);
+            }
+        });
+    }
+
+    private void removeFromFavorites() {
+        displayNotFavoriteIcon();
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.movieDao().deleteMovie(movie);
+            }
+        });
+    }
+
+    private void displayNotFavoriteIcon(){
+        isFavourite = false;
+        mBinding.ivFavouriteStar.setImageResource(android.R.drawable.btn_star_big_off);
+    }
+
+    private void displayFavoriteIcon(){
+        isFavourite = true;
+        mBinding.ivFavouriteStar.setImageResource(android.R.drawable.btn_star_big_on);
+    }
 }
