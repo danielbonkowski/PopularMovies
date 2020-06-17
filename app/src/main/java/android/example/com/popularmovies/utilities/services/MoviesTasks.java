@@ -4,6 +4,7 @@ import android.content.Context;
 import android.example.com.popularmovies.CheckMovieViewModel;
 import android.example.com.popularmovies.MainViewModel;
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.data.Review;
 import android.example.com.popularmovies.data.Trailer;
 import android.util.Log;
 
@@ -35,7 +36,7 @@ public class MoviesTasks {
         if(ServicesUtils.ACTION_SET_MOVIE_TRAILERS.equals(action)){
             setMovieTrailers(context, movieId);
         }else if(ServicesUtils.ACTION_SET_MOVIE_REVIEWS.equals(action)){
-
+            setMovieReviews(context, movieId);
         }
         return null;
     }
@@ -70,8 +71,13 @@ public class MoviesTasks {
 
     }
 
-    private static void setMovieReviews(Context context){
-
+    private static void setMovieReviews(Context context, String movieId){
+        try{
+            List<Review> movieReviews = new MovieReviewsTask().execute(movieId).get();
+            CheckMovieViewModel.setReviews(movieReviews);
+        }catch (ExecutionException | InterruptedException e){
+            e.printStackTrace();
+        }
     }
 
 }

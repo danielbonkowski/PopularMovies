@@ -27,11 +27,11 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
         void onClick(Trailer trailer);
     }
 
-    public ArrayList<Trailer> getTrailersData(){
+    public List<Trailer> getTrailersData(){
         if(mTrailersData == null){
             return null;
         }
-        return new ArrayList<>(mTrailersData);
+        return mTrailersData;
     }
 
     public void setTrailersData(List<Trailer> trailersData){

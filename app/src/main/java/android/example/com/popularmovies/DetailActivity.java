@@ -199,7 +199,6 @@ public class DetailActivity extends AppCompatActivity implements
         movie = (Movie) parcelableMovie;
 
         mDb = AppDatabase.getInstance(getApplicationContext());
-        setupViewModel();
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
@@ -217,9 +216,7 @@ public class DetailActivity extends AppCompatActivity implements
         mReviewsAdapter = new ReviewsAdapter();
         mBinding.rvReviews.setAdapter(mReviewsAdapter);
 
-
         loadAllDetails(movie);
-        
         setupViewModel();
 
     }
@@ -228,9 +225,47 @@ public class DetailActivity extends AppCompatActivity implements
     private void loadAllDetails(Movie movie){
         String movieId = String.valueOf(movie.getMovieId());
 
-        ServicesUtils.startTrailersService(this, movieId);
-        loadReviews(movieId);
+        setMovieTrailers(movieId);
+        setMovieReviews(movieId);
         showDetails(movie);
+    }
+
+    private void setMovieTrailers(String movieId){
+        int nrOfTrailers = CheckMovieViewModel.nrOfTrailers();
+        if(nrOfTrailers == 0){
+            Log.d(TAG, "Starting Trailers Service");
+            ServicesUtils.startTrailersService(this, movieId);
+        }
+    }
+
+    private void setMovieReviews(String movieId){
+        int nrOfReviews = CheckMovieViewModel.nrOfReviews();
+        if(nrOfReviews == 0){
+            Log.d(TAG, "Starting Reviews Service");
+            ServicesUtils.startReviewsService(this, movieId);
+        }
+    }
+
+    private void showDetails(Movie movie){
+
+        if(movie == null){
+            return;
+        }
+
+        Context context = mBinding.ivDetailsPoster.getContext();
+        ImageUtils.loadPosterImage(context, movie.getMoviePoster(),
+                mBinding.ivDetailsPoster);
+
+        String originalTitle = movie.getOriginalTitle();
+        Double userRating =  movie.getUserAverageRating();
+        String plotSynopsis = movie.getPlotSynopsis();
+        String releaseDate = movie.getReleaseDate(DetailActivity.this);
+
+
+        mBinding.tvDetailsOriginalTitle.setText(originalTitle);
+        mBinding.tvDetailsUserRating.setText(userRating.toString());
+        mBinding.tvDetailsSynopsis.setText(plotSynopsis);
+        mBinding.tvDetailsReleaseDate.setText(releaseDate);
     }
 
     private void setupViewModel() {
@@ -262,7 +297,19 @@ public class DetailActivity extends AppCompatActivity implements
 
             }
         });
-        
+
+        viewModel.getReviews().observe(this, new Observer<List<Review>>() {
+            @Override
+            public void onChanged(List<Review> reviews) {
+                if(reviews != null){
+                    showReviewsDataView();
+                    mReviewsAdapter.setReviewsData(reviews);
+                }else {
+                    showReviewsErrorMessage();
+                }
+            }
+        });
+
     }
 
     private void showTrailersDataView(){
@@ -285,27 +332,7 @@ public class DetailActivity extends AppCompatActivity implements
         mBinding.rvReviews.setVisibility(View.INVISIBLE);
     }
 
-    private void showDetails(Movie movie){
 
-        if(movie == null){
-            return;
-        }
-
-        Context context = mBinding.ivDetailsPoster.getContext();
-        ImageUtils.loadPosterImage(context, movie.getMoviePoster(),
-                mBinding.ivDetailsPoster);
-
-        String originalTitle = movie.getOriginalTitle();
-        Double userRating =  movie.getUserAverageRating();
-        String plotSynopsis = movie.getPlotSynopsis();
-        String releaseDate = movie.getReleaseDate(DetailActivity.this);
-
-
-        mBinding.tvDetailsOriginalTitle.setText(originalTitle);
-        mBinding.tvDetailsUserRating.setText(userRating.toString());
-        mBinding.tvDetailsSynopsis.setText(plotSynopsis);
-        mBinding.tvDetailsReleaseDate.setText(releaseDate);
-    }
 
     private void loadTrailers(String filmId){
 
