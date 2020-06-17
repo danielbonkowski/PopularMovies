@@ -25,6 +25,11 @@
                 android:value=".MainActivity"
                 />
         </activity>
+
+        <service
+            android:enabled="true"
+            android:name="android.example.com.popularmovies.utilities.MoviesIntentService"
+            android:exported="false"/>
     </application>
 
 </manifest>

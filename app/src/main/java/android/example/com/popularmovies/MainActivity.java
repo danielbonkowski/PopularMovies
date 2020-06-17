@@ -1,14 +1,11 @@
 package android.example.com.popularmovies;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.AsyncTaskLoader;
-import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.content.Context;
@@ -17,9 +14,6 @@ import android.example.com.popularmovies.data.AppDatabase;
 import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.databinding.ActivityMainBinding;
 import android.example.com.popularmovies.utilities.ImageUtils;
-import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
-import android.example.com.popularmovies.utilities.NetworkUtils;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -30,19 +24,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         MoviesAdapter.MoviesAdapterOnClickHandler,
-        AdapterView.OnItemSelectedListener,
-        LoaderManager.LoaderCallbacks<String>{
+        AdapterView.OnItemSelectedListener{
 
     private final String TAG = MainActivity.class.getSimpleName();
 
+
+    private final String SORT_TYPE = "sort_type";
     private final int SORT_POPULARITY = 0;
     private final int SORT_TOP_RATED = 1;
     private final int SORT_FAVOURITES = 2;
@@ -60,9 +51,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDb = AppDatabase.getInstance(getApplicationContext());
-        setupFavoritesViewModel();
-
         int columnsSpan = ImageUtils.calculateNrOfColumns(MainActivity.this);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
@@ -77,52 +65,106 @@ public class MainActivity extends AppCompatActivity implements
 
         mBinding.recyclerviewMovies.setAdapter(mMoviesAdapter);
 
-        if(savedInstanceState == null || !savedInstanceState.containsKey("movies")){
-            fetchMostPopularMovies();
-
-        }else{
-            List<Movie> movies = savedInstanceState.getParcelableArrayList("movies");
-            if(movies == null){
-                showErrorMessage();
-                return;
-            }
-            mMoviesAdapter.setMoviesData(movies);
-            mBinding.recyclerviewMovies.setAdapter(mMoviesAdapter);
-
-            mSortSpinnerPosition = savedInstanceState.getInt("spinnerPosition");
-        }
+        mDb = AppDatabase.getInstance(getApplicationContext());
+        setupViewModel();
 
     }
 
-    private void fetchMostPopularMovies() {
+    private void setMostPopularMovies() {
         showMoviesDataView();
 
-        new FetchMoviesTask().execute(SORT_POPULARITY);
+        Log.d(TAG, "Main fetch popularMovies");
+        MainViewModel.startMostPopularMoviesService(this);
     }
 
-    private void fetchTopRatedMovies(){
+    private void setTopRatedMovies(){
         showMoviesDataView();
-
-        new FetchMoviesTask().execute(SORT_TOP_RATED);
+        MainViewModel.startTopRatedMoviesService(this);
     }
 
-    private void setupFavoritesViewModel(){
+    private void setFavoriteMovies(){
+        showMoviesDataView();
+        recreate();
+    }
+
+    private void setupViewModel(){
 
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(List<Movie> movies) {
-                Log.d(TAG, "Updating list of movies from LiveData in ViewModel");
-                mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
 
-                if(movies != null){
-                    showMoviesDataView();
-                    mMoviesAdapter.setMoviesData(movies);
-                }else{
-                    showErrorMessage();
+        viewModel.getSpinnerPosition().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if(integer == SORT_POPULARITY){
+                    mSortSpinnerPosition = SORT_POPULARITY;
+                    setMostPopularMovies();
+                }else if(integer == SORT_TOP_RATED){
+                    mSortSpinnerPosition = SORT_TOP_RATED;
+                    setTopRatedMovies();
+                }else if(integer == SORT_FAVOURITES){
+                    mSortSpinnerPosition = SORT_FAVOURITES;
                 }
             }
         });
+
+        viewModel.getMostPopularMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(List<Movie> movies) {
+                if(mSortSpinnerPosition == SORT_POPULARITY) {
+                    Log.d(TAG, "Main popularMovies change");
+                    Log.d(TAG, "Updating list of movies from LiveData in ViewModel Most Popular");
+                    mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
+
+                    if (movies != null) {
+                        showMoviesDataView();
+                        mMoviesAdapter.setMoviesData(movies);
+                    } else {
+                        showErrorMessage();
+                    }
+                }
+            }
+
+
+        });
+
+        viewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(List<Movie> movies) {
+                if(mSortSpinnerPosition == SORT_TOP_RATED){
+                    Log.d(TAG, "Main popularMovies change");
+                    Log.d(TAG, "Updating list of movies from LiveData in ViewModel Top Rated");
+                    mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
+
+                    if(movies != null){
+                        showMoviesDataView();
+                        mMoviesAdapter.setMoviesData(movies);
+                    }else{
+                        showErrorMessage();
+                    }
+                }
+            }
+        });
+
+        viewModel.getFavoriteMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(List<Movie> movies) {
+                Log.d(TAG, "Before Updating list of movies from LiveData in ViewModel Favorites" + mSortSpinnerPosition);
+
+                if(mSortSpinnerPosition == SORT_FAVOURITES) {
+                    Log.d(TAG, "Updating list of movies from LiveData in ViewModel Favorites" + mSortSpinnerPosition);
+                    mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
+
+                    if (movies != null) {
+                        showMoviesDataView();
+                        mMoviesAdapter.setMoviesData(movies);
+                    } else {
+                        showErrorMessage();
+                    }
+                }
+            }
+        });
+
+
+
     }
 
     private void showMoviesDataView() {
@@ -135,15 +177,6 @@ public class MainActivity extends AppCompatActivity implements
         mBinding.tvErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        if(mMoviesAdapter != null){
-            outState.putParcelableArrayList("movies", mMoviesAdapter.getMoviesData());
-            outState.putInt("spinnerPosition", mSortSpinnerPosition);
-        }
-
-        super.onSaveInstanceState(outState);
-    }
 
     @Override
     public void onClick(Movie movieData) {
@@ -189,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Log.d(TAG, "Spinner selected at position: " + position );
         if(mSortSpinnerPosition == position){
             return;
         }
@@ -196,10 +230,16 @@ public class MainActivity extends AppCompatActivity implements
         mSortSpinnerPosition = position;
 
         if(mSortSpinnerPosition == SORT_POPULARITY){
-            fetchMostPopularMovies();
+            MainViewModel.setSpinnerPosition(SORT_POPULARITY);
+            setMostPopularMovies();
+
         }else if(mSortSpinnerPosition == SORT_TOP_RATED){
-            fetchTopRatedMovies();
+            MainViewModel.setSpinnerPosition(SORT_TOP_RATED);
+            setTopRatedMovies();
+
         }else if(mSortSpinnerPosition == SORT_FAVOURITES){
+            MainViewModel.setSpinnerPosition(SORT_FAVOURITES);
+            setFavoriteMovies();
 
         }
         else{
@@ -212,75 +252,4 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    @NonNull
-    @Override
-    public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
-        return new AsyncTaskLoader<String>(this){
-            @Nullable
-            @Override
-            public String loadInBackground() {
-                return null;
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<String> loader) {
-
-    }
-
-    class FetchMoviesTask extends AsyncTask<Integer, Void, List<Movie>>{
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected List<Movie> doInBackground(Integer... params) {
-
-
-
-            if(params.length == 0){
-                return null;
-            }
-
-            int sortType = params[0];
-            URL moviesRequestUrl = sortType == SORT_TOP_RATED ?
-                    NetworkUtils.buildTopRatedUrl() : NetworkUtils.buildPopularityUrl();
-
-            try{
-                String jsonMoviesResponse = NetworkUtils
-                        .getResponseFromHttpUrl(moviesRequestUrl);
-
-                return MovieDatabaseJsonUtils.getMovieObjectsFromJson(jsonMoviesResponse);
-
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-                Log.d(TAG, "Error: " + e.getMessage());
-                return null;
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> moviesData) {
-            super.onPostExecute(moviesData);
-            mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
-
-
-            if(moviesData != null){
-                showMoviesDataView();
-                mMoviesAdapter.setMoviesData(moviesData);
-            }else{
-                showErrorMessage();
-            }
-        }
-    }
 }
