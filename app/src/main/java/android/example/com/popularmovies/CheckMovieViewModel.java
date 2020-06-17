@@ -36,18 +36,6 @@ public class CheckMovieViewModel extends ViewModel {
         CheckMovieViewModel.trailers.postValue(trailers);
     }
 
-    public static int nrOfTrailers(){
-        if(trailers == null){
-            return 0;
-        }
-
-        List<Trailer> myTrailers = trailers.getValue();
-        if(myTrailers == null){
-            return 0;
-        }
-
-        return myTrailers.size();
-    }
 
     public MutableLiveData<List<Review>> getReviews() {
         if(reviews == null){
@@ -60,14 +48,4 @@ public class CheckMovieViewModel extends ViewModel {
         CheckMovieViewModel.reviews.postValue(reviews);
     }
 
-    public static int nrOfReviews(){
-        if (reviews == null){
-            return 0;
-        }
-        List<Review> myReviews = reviews.getValue();
-        if (myReviews == null){
-            return 0;
-        }
-        return myReviews.size();
-    }
 }

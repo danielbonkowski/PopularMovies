@@ -216,34 +216,18 @@ public class DetailActivity extends AppCompatActivity implements
         mReviewsAdapter = new ReviewsAdapter();
         mBinding.rvReviews.setAdapter(mReviewsAdapter);
 
-        loadAllDetails(movie);
-        setupViewModel();
 
+        setupViewModel();
+        loadAllDetails(movie);
     }
 
 
     private void loadAllDetails(Movie movie){
         String movieId = String.valueOf(movie.getMovieId());
 
-        setMovieTrailers(movieId);
-        setMovieReviews(movieId);
+        ServicesUtils.startTrailersService(this, movieId);
+        ServicesUtils.startReviewsService(this, movieId);
         showDetails(movie);
-    }
-
-    private void setMovieTrailers(String movieId){
-        int nrOfTrailers = CheckMovieViewModel.nrOfTrailers();
-        if(nrOfTrailers == 0){
-            Log.d(TAG, "Starting Trailers Service");
-            ServicesUtils.startTrailersService(this, movieId);
-        }
-    }
-
-    private void setMovieReviews(String movieId){
-        int nrOfReviews = CheckMovieViewModel.nrOfReviews();
-        if(nrOfReviews == 0){
-            Log.d(TAG, "Starting Reviews Service");
-            ServicesUtils.startReviewsService(this, movieId);
-        }
     }
 
     private void showDetails(Movie movie){
@@ -288,7 +272,7 @@ public class DetailActivity extends AppCompatActivity implements
         viewModel.getTrailers().observe(this, new Observer<List<Trailer>>() {
             @Override
             public void onChanged(List<Trailer> trailers) {
-                if(trailers != null){
+                if(trailers != null && trailers.size() > 0){
                     showTrailersDataView();
                     mTrailersAdapter.setTrailersData(trailers);
                 }else{
@@ -301,7 +285,7 @@ public class DetailActivity extends AppCompatActivity implements
         viewModel.getReviews().observe(this, new Observer<List<Review>>() {
             @Override
             public void onChanged(List<Review> reviews) {
-                if(reviews != null){
+                if(reviews != null && reviews.size() > 0){
                     showReviewsDataView();
                     mReviewsAdapter.setReviewsData(reviews);
                 }else {
@@ -333,45 +317,8 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
 
-
-    private void loadTrailers(String filmId){
-
-        URL trailersSearchUrl = NetworkUtils.buildTrailersUrl(filmId);
-
-        Bundle queryBundle = new Bundle();
-        queryBundle.putString(SEARCH_QUERY_EXTRA, trailersSearchUrl.toString());
-
-        LoaderManager loaderManager =  getSupportLoaderManager();
-        Loader<List<Trailer>> loader = loaderManager.getLoader(TRAILERS_LOADER_ID);
-
-        if(loader == null){
-            loaderManager.initLoader(TRAILERS_LOADER_ID, queryBundle, trailersResultsLoaderListener);
-        }else{
-            loaderManager.restartLoader(TRAILERS_LOADER_ID, queryBundle, trailersResultsLoaderListener);
-        }
-    }
-
-
-    private void loadReviews(String filmId){
-
-        URL reviewsSearchUrl = NetworkUtils.buildReviewsUrl(filmId);
-
-        Bundle queryBundle = new Bundle();
-        queryBundle.putString(SEARCH_QUERY_EXTRA, reviewsSearchUrl.toString());
-
-        LoaderManager loaderManager = getSupportLoaderManager();
-        Loader<List<Review>> loader = loaderManager.getLoader(REVIEWS_LOADER_ID);
-
-        if(loader == null){
-            loaderManager.initLoader(REVIEWS_LOADER_ID, queryBundle, reviewsResultsLoaderListener);
-        }else {
-            loaderManager.restartLoader(REVIEWS_LOADER_ID, queryBundle, reviewsResultsLoaderListener);
-        }
-
-    }
-
     @Override
-    public void onClick(Trailer trailer) {
+    public void onTrailerClick(Trailer trailer) {
         Log.v("HERE", "I clicked it");
         Context context = this;
         Uri youtubeUrl = NetworkUtils.buildYoutubeTrailerUrl(trailer.getKey());
@@ -384,19 +331,27 @@ public class DetailActivity extends AppCompatActivity implements
 
 
 
-    public void starClick(View view) {
+    public void onStarClick(View view) {
 
+        Log.d(TAG, "Star clicked: isFavorite: " + isFavourite);
         if(isFavourite){
-            isFavourite = false;
             removeFromFavorites();
         }else{
-            isFavourite = true;
             addToFavorites();
         }
     }
 
     private void addToFavorites() {
+        addMovieToDb();
         displayFavoriteIcon();
+    }
+
+    private void removeFromFavorites() {
+        removeMovieFromDb();
+        displayNotFavoriteIcon();
+    }
+
+    private void addMovieToDb(){
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -405,8 +360,7 @@ public class DetailActivity extends AppCompatActivity implements
         });
     }
 
-    private void removeFromFavorites() {
-        displayNotFavoriteIcon();
+    private void removeMovieFromDb(){
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -416,10 +370,13 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     private void displayNotFavoriteIcon(){
+        isFavourite = false;
         mBinding.ivFavouriteStar.setImageResource(android.R.drawable.btn_star_big_off);
     }
 
     private void displayFavoriteIcon(){
+        isFavourite = true;
         mBinding.ivFavouriteStar.setImageResource(android.R.drawable.btn_star_big_on);
+
     }
 }

@@ -237,7 +237,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_details_release_date"
             app:srcCompat="@android:drawable/btn_star_big_off"
-            android:onClick="starClick"/>
+            android:onClick="onStarClick"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
