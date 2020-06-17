@@ -22,6 +22,7 @@ import android.example.com.popularmovies.databinding.ActivityDetailBinding;
 import android.example.com.popularmovies.utilities.ImageUtils;
 import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
+import android.example.com.popularmovies.utilities.services.ServicesUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -227,7 +228,7 @@ public class DetailActivity extends AppCompatActivity implements
     private void loadAllDetails(Movie movie){
         String movieId = String.valueOf(movie.getMovieId());
 
-        loadTrailers(movieId);
+        ServicesUtils.startTrailersService(this, movieId);
         loadReviews(movieId);
         showDetails(movie);
     }
@@ -248,6 +249,20 @@ public class DetailActivity extends AppCompatActivity implements
                 }
             }
         });
+
+        viewModel.getTrailers().observe(this, new Observer<List<Trailer>>() {
+            @Override
+            public void onChanged(List<Trailer> trailers) {
+                if(trailers != null){
+                    showTrailersDataView();
+                    mTrailersAdapter.setTrailersData(trailers);
+                }else{
+                    showTrailersErrorMessage();
+                }
+
+            }
+        });
+        
     }
 
     private void showTrailersDataView(){

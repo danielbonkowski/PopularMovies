@@ -25,7 +25,10 @@ public class CheckMovieViewModel extends ViewModel {
         return movie;
     }
 
-    public static MutableLiveData<List<Trailer>> getTrailers() {
+    public MutableLiveData<List<Trailer>> getTrailers() {
+        if (trailers == null){
+            trailers = new MutableLiveData<List<Trailer>>();
+        }
         return trailers;
     }
 
@@ -33,7 +36,10 @@ public class CheckMovieViewModel extends ViewModel {
         CheckMovieViewModel.trailers.postValue(trailers);
     }
 
-    public static MutableLiveData<List<Review>> getReviews() {
+    public MutableLiveData<List<Review>> getReviews() {
+        if(reviews == null){
+            reviews = new MutableLiveData<List<Review>>();
+        }
         return reviews;
     }
 
