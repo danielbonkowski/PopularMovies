@@ -21,13 +21,6 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
     private final int MAX_REVIEW_LINES =  Integer.MAX_VALUE;
     private final int FEW_REVIEW_LINES = 3;
 
-    public List<Review> getReviewsData(){
-        if(mReviewsData == null){
-            return null;
-        }
-        return new ArrayList<>(mReviewsData);
-    }
-
     public void setReviewsData(List<Review> reviewsData){
         if(reviewsData != null){
             mReviewsData = new ArrayList<>(reviewsData);

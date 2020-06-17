@@ -27,13 +27,6 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
         void onTrailerClick(Trailer trailer);
     }
 
-    public List<Trailer> getTrailersData(){
-        if(mTrailersData == null){
-            return null;
-        }
-        return mTrailersData;
-    }
-
     public void setTrailersData(List<Trailer> trailersData){
         if(trailersData != null){
             mTrailersData = new ArrayList<>(trailersData);

@@ -5,7 +5,6 @@ import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONException;
 
