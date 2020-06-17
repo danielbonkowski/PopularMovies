@@ -1,8 +1,10 @@
 package android.example.com.popularmovies.utilities.services;
 
 import android.content.Context;
+import android.example.com.popularmovies.CheckMovieViewModel;
 import android.example.com.popularmovies.MainViewModel;
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.data.Trailer;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -15,17 +17,25 @@ public class MoviesTasks {
 
     private static final String TAG = MoviesTasks.class.getSimpleName();
 
-    public static final String ACTION_SET_MOST_POPULAR_MOVIES = "get-most-popular-movies";
-    public static final String ACTION_SET_TOP_RATED_MOVIES = "get-top-rated-movies";
-
     public static LiveData<List<Movie>> executeTask(Context context, String action){
 
-        if(ACTION_SET_MOST_POPULAR_MOVIES.equals(action)){
+        if(ServicesUtils.ACTION_SET_MOST_POPULAR_MOVIES.equals(action)){
             Log.d(TAG, "Fetching most popular movies 42");
              setMostPopularMovies(context);
-        }else if(ACTION_SET_TOP_RATED_MOVIES.equals(action)){
+        }else if(ServicesUtils.ACTION_SET_TOP_RATED_MOVIES.equals(action)){
              setTopRatedMovies(context);
             Log.d(TAG, "Fetching top rated movies 42");
+        }
+        return null;
+    }
+
+    public static LiveData<List<Movie>> executeTask(Context context,
+                                                    String action, String movieId){
+
+        if(ServicesUtils.ACTION_SET_MOVIE_TRAILERS.equals(action)){
+            setMovieTrailers(context, movieId);
+        }else if(ServicesUtils.ACTION_SET_MOVIE_REVIEWS.equals(action)){
+
         }
         return null;
     }
@@ -49,4 +59,19 @@ public class MoviesTasks {
             e.printStackTrace();
         }
     }
+
+    private static void setMovieTrailers(Context context, String movieId){
+        try{
+            List<Trailer> movieTrailers = new MovieTrailersTask().execute(movieId).get();
+            CheckMovieViewModel.setTrailers(movieTrailers);
+        }catch (ExecutionException | InterruptedException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void setMovieReviews(Context context){
+
+    }
+
 }

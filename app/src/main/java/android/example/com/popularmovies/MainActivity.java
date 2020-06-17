@@ -98,13 +98,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setSpinnerPosition(Integer spinnerPosition){
-        if(spinnerPosition == SORT_POPULARITY){
-            mSortSpinnerPosition = SORT_POPULARITY;
-        }else if(spinnerPosition == SORT_TOP_RATED){
-            mSortSpinnerPosition = SORT_TOP_RATED;
-        }else if(spinnerPosition == SORT_FAVOURITES){
-            mSortSpinnerPosition = SORT_FAVOURITES;
-        }
+        mSortSpinnerPosition = spinnerPosition;
     }
 
 
@@ -202,13 +196,10 @@ public class MainActivity extends AppCompatActivity implements
         mSortSpinnerPosition = position;
 
         if(mSortSpinnerPosition == SORT_POPULARITY){
-            MainViewModel.setSpinnerPosition(SORT_POPULARITY);
             setMostPopularMovies();
         }else if(mSortSpinnerPosition == SORT_TOP_RATED){
-            MainViewModel.setSpinnerPosition(SORT_TOP_RATED);
             setTopRatedMovies();
         }else if(mSortSpinnerPosition == SORT_FAVOURITES){
-            MainViewModel.setSpinnerPosition(SORT_FAVOURITES);
             setFavoriteMovies();
         }
         else{
@@ -217,16 +208,19 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setMostPopularMovies() {
+        MainViewModel.setSpinnerPosition(SORT_POPULARITY);
         mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
         ServicesUtils.startMostPopularMoviesService(this);
     }
 
     private void setTopRatedMovies(){
+        MainViewModel.setSpinnerPosition(SORT_TOP_RATED);
         mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
         ServicesUtils.startTopRatedMoviesService(this);
     }
 
     private void setFavoriteMovies(){
+        MainViewModel.setSpinnerPosition(SORT_FAVOURITES);
         mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
         recreate();
     }

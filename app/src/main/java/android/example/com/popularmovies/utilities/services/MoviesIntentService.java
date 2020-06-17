@@ -21,7 +21,14 @@ public class MoviesIntentService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         Log.d("TAG", "Fetching most popular movies 51");
         String action = intent.getAction();
-        MoviesTasks.executeTask(this, action);
+        String movieId = intent.getStringExtra(ServicesUtils.PARAM_MOVIE_ID);
+
+        if(movieId == null){
+            MoviesTasks.executeTask(this, action);
+        }else{
+            MoviesTasks.executeTask(this, action, movieId);
+        }
+
         stopSelf();
     }
 }

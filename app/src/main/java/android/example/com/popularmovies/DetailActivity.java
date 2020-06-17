@@ -4,9 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.AsyncTaskLoader;
@@ -78,6 +76,7 @@ public class DetailActivity extends AppCompatActivity implements
                         @Nullable
                         @Override
                         public List<Trailer> loadInBackground() {
+
                             String trailersQueryUrlString = bundle.getString(SEARCH_QUERY_EXTRA);
 
                             if(trailersQueryUrlString == null || trailersQueryUrlString.isEmpty()){
@@ -199,7 +198,7 @@ public class DetailActivity extends AppCompatActivity implements
         movie = (Movie) parcelableMovie;
 
         mDb = AppDatabase.getInstance(getApplicationContext());
-        checkIfFavourite();
+        setupViewModel();
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
@@ -219,6 +218,8 @@ public class DetailActivity extends AppCompatActivity implements
 
 
         loadAllDetails(movie);
+        
+        setupViewModel();
 
     }
 
@@ -231,7 +232,7 @@ public class DetailActivity extends AppCompatActivity implements
         showDetails(movie);
     }
 
-    private void checkIfFavourite() {
+    private void setupViewModel() {
 
         CheckMovieViewModelFactory factory = new CheckMovieViewModelFactory(mDb, movie.getMovieId());
         final CheckMovieViewModel viewModel = ViewModelProviders.of(this, factory).get(CheckMovieViewModel.class);
@@ -321,7 +322,7 @@ public class DetailActivity extends AppCompatActivity implements
 
         if(loader == null){
             loaderManager.initLoader(REVIEWS_LOADER_ID, queryBundle, reviewsResultsLoaderListener);
-        }else{
+        }else {
             loaderManager.restartLoader(REVIEWS_LOADER_ID, queryBundle, reviewsResultsLoaderListener);
         }
 
@@ -344,8 +345,10 @@ public class DetailActivity extends AppCompatActivity implements
     public void starClick(View view) {
 
         if(isFavourite){
+            isFavourite = false;
             removeFromFavorites();
         }else{
+            isFavourite = true;
             addToFavorites();
         }
     }
@@ -371,12 +374,10 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     private void displayNotFavoriteIcon(){
-        isFavourite = false;
         mBinding.ivFavouriteStar.setImageResource(android.R.drawable.btn_star_big_off);
     }
 
     private void displayFavoriteIcon(){
-        isFavourite = true;
         mBinding.ivFavouriteStar.setImageResource(android.R.drawable.btn_star_big_on);
     }
 }
