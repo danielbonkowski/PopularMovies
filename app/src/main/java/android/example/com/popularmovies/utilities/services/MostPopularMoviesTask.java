@@ -1,15 +1,11 @@
-package android.example.com.popularmovies.utilities;
+package android.example.com.popularmovies.utilities.services;
 
 import android.content.Context;
-import android.example.com.popularmovies.MainViewModel;
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
+import android.example.com.popularmovies.utilities.NetworkUtils;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONException;
 

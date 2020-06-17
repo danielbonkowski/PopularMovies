@@ -1,16 +1,10 @@
-package android.example.com.popularmovies.utilities;
+package android.example.com.popularmovies.utilities.services;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.example.com.popularmovies.MainViewModel;
-import android.example.com.popularmovies.data.Movie;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
-
-import java.util.List;
 
 public class MoviesIntentService extends IntentService {
     /**

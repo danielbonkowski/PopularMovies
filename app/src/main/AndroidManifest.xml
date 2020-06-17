@@ -28,7 +28,7 @@
 
         <service
             android:enabled="true"
-            android:name="android.example.com.popularmovies.utilities.MoviesIntentService"
+            android:name="android.example.com.popularmovies.utilities.services.MoviesIntentService"
             android:exported="false"/>
     </application>
 

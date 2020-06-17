@@ -14,6 +14,7 @@ import android.example.com.popularmovies.data.AppDatabase;
 import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.databinding.ActivityMainBinding;
 import android.example.com.popularmovies.utilities.ImageUtils;
+import android.example.com.popularmovies.utilities.services.ServicesUtils;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -32,17 +33,14 @@ public class MainActivity extends AppCompatActivity implements
 
     private final String TAG = MainActivity.class.getSimpleName();
 
+    private int mSortSpinnerPosition = -1;
     private final int SORT_POPULARITY = 0;
     private final int SORT_TOP_RATED = 1;
     private final int SORT_FAVOURITES = 2;
 
     private MoviesAdapter mMoviesAdapter;
 
-    private int mSortSpinnerPosition = 0;
-
     private ActivityMainBinding mBinding;
-
-    private AppDatabase mDb;
 
 
     @Override
@@ -63,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements
 
         mBinding.recyclerviewMovies.setAdapter(mMoviesAdapter);
 
-        mDb = AppDatabase.getInstance(getApplicationContext());
         setupViewModel();
 
     }
@@ -71,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements
     private void setupViewModel(){
 
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-
         viewModel.getSpinnerPosition().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer spinnerPosition) {
@@ -99,9 +95,6 @@ public class MainActivity extends AppCompatActivity implements
                 displayFavoriteMoviesIfSelected(movies);
             }
         });
-
-
-
     }
 
     private void setSpinnerPosition(Integer spinnerPosition){
@@ -211,11 +204,9 @@ public class MainActivity extends AppCompatActivity implements
         if(mSortSpinnerPosition == SORT_POPULARITY){
             MainViewModel.setSpinnerPosition(SORT_POPULARITY);
             setMostPopularMovies();
-
         }else if(mSortSpinnerPosition == SORT_TOP_RATED){
             MainViewModel.setSpinnerPosition(SORT_TOP_RATED);
             setTopRatedMovies();
-
         }else if(mSortSpinnerPosition == SORT_FAVOURITES){
             MainViewModel.setSpinnerPosition(SORT_FAVOURITES);
             setFavoriteMovies();
@@ -227,12 +218,12 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setMostPopularMovies() {
         mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
-        MainViewModel.startMostPopularMoviesService(this);
+        ServicesUtils.startMostPopularMoviesService(this);
     }
 
     private void setTopRatedMovies(){
         mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
-        MainViewModel.startTopRatedMoviesService(this);
+        ServicesUtils.startTopRatedMoviesService(this);
     }
 
     private void setFavoriteMovies(){

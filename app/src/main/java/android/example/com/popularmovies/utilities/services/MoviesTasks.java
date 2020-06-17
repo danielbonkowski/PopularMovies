@@ -1,4 +1,4 @@
-package android.example.com.popularmovies.utilities;
+package android.example.com.popularmovies.utilities.services;
 
 import android.content.Context;
 import android.example.com.popularmovies.MainViewModel;
@@ -17,7 +17,6 @@ public class MoviesTasks {
 
     public static final String ACTION_SET_MOST_POPULAR_MOVIES = "get-most-popular-movies";
     public static final String ACTION_SET_TOP_RATED_MOVIES = "get-top-rated-movies";
-    public static final String ACTION_RESET_FAVORITE_MOVIES = "reset-favorite-movies";
 
     public static LiveData<List<Movie>> executeTask(Context context, String action){
 
@@ -27,9 +26,6 @@ public class MoviesTasks {
         }else if(ACTION_SET_TOP_RATED_MOVIES.equals(action)){
              setTopRatedMovies(context);
             Log.d(TAG, "Fetching top rated movies 42");
-        }else if (ACTION_RESET_FAVORITE_MOVIES.equals(action)){
-            Log.d(TAG, "Fetching favorite movies 42");
-            resetFavoriteMovies(context);
         }
         return null;
     }
@@ -52,12 +48,5 @@ public class MoviesTasks {
         }catch (ExecutionException | InterruptedException e){
             e.printStackTrace();
         }
-    }
-
-    private static void resetFavoriteMovies(Context context){
-        Log.d(TAG, "Reset favorite movies 43");
-        LiveData<List<Movie>> favoriteMovies =  MainViewModel.getFavoriteMovies();
-        MainViewModel.setFavoriteMovies(null);
-        MainViewModel.setFavoriteMovies(favoriteMovies);
     }
 }
