@@ -22,6 +22,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
+import android.widget.Toast;
+
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements
@@ -196,11 +198,13 @@ public class DetailActivity extends AppCompatActivity implements
     private void addToFavorites() {
         addMovieToDb();
         displayFavoriteIcon();
+        showInsertionToast();
     }
 
     private void removeFromFavorites() {
         removeMovieFromDb();
         displayNotFavoriteIcon();
+        showDeletionToast();
     }
 
     private void addMovieToDb(){
@@ -230,5 +234,15 @@ public class DetailActivity extends AppCompatActivity implements
         isFavourite = true;
         mBinding.ivFavouriteStar.setImageResource(android.R.drawable.btn_star_big_on);
 
+    }
+
+    private void showInsertionToast(){
+        Toast.makeText(this, getString(R.string.movie_insertion_toast_message),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    private void showDeletionToast(){
+        Toast.makeText(this, getString(R.string.movie_deletion_toast_message),
+                Toast.LENGTH_SHORT).show();
     }
 }
