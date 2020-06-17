@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private final String TAG = MainActivity.class.getSimpleName();
 
-
-    private final String SORT_TYPE = "sort_type";
     private final int SORT_POPULARITY = 0;
     private final int SORT_TOP_RATED = 1;
     private final int SORT_FAVOURITES = 2;
@@ -70,102 +68,83 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private void setMostPopularMovies() {
-        showMoviesDataView();
-
-        Log.d(TAG, "Main fetch popularMovies");
-        MainViewModel.startMostPopularMoviesService(this);
-    }
-
-    private void setTopRatedMovies(){
-        showMoviesDataView();
-        MainViewModel.startTopRatedMoviesService(this);
-    }
-
-    private void setFavoriteMovies(){
-        showMoviesDataView();
-        recreate();
-    }
-
     private void setupViewModel(){
 
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         viewModel.getSpinnerPosition().observe(this, new Observer<Integer>() {
             @Override
-            public void onChanged(Integer integer) {
-                if(integer == SORT_POPULARITY){
-                    mSortSpinnerPosition = SORT_POPULARITY;
-                    setMostPopularMovies();
-                }else if(integer == SORT_TOP_RATED){
-                    mSortSpinnerPosition = SORT_TOP_RATED;
-                    setTopRatedMovies();
-                }else if(integer == SORT_FAVOURITES){
-                    mSortSpinnerPosition = SORT_FAVOURITES;
-                }
+            public void onChanged(Integer spinnerPosition) {
+                setSpinnerPosition(spinnerPosition);
             }
         });
 
         viewModel.getMostPopularMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(List<Movie> movies) {
-                if(mSortSpinnerPosition == SORT_POPULARITY) {
-                    Log.d(TAG, "Main popularMovies change");
-                    Log.d(TAG, "Updating list of movies from LiveData in ViewModel Most Popular");
-                    mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
-
-                    if (movies != null) {
-                        showMoviesDataView();
-                        mMoviesAdapter.setMoviesData(movies);
-                    } else {
-                        showErrorMessage();
-                    }
-                }
+                displayMostPopularMoviesIfSelected(movies);
             }
-
-
         });
 
         viewModel.getTopRatedMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(List<Movie> movies) {
-                if(mSortSpinnerPosition == SORT_TOP_RATED){
-                    Log.d(TAG, "Main popularMovies change");
-                    Log.d(TAG, "Updating list of movies from LiveData in ViewModel Top Rated");
-                    mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
-
-                    if(movies != null){
-                        showMoviesDataView();
-                        mMoviesAdapter.setMoviesData(movies);
-                    }else{
-                        showErrorMessage();
-                    }
-                }
+                displayTopRatedMoviesIfSelected(movies);
             }
         });
 
         viewModel.getFavoriteMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(List<Movie> movies) {
-                Log.d(TAG, "Before Updating list of movies from LiveData in ViewModel Favorites" + mSortSpinnerPosition);
-
-                if(mSortSpinnerPosition == SORT_FAVOURITES) {
-                    Log.d(TAG, "Updating list of movies from LiveData in ViewModel Favorites" + mSortSpinnerPosition);
-                    mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
-
-                    if (movies != null) {
-                        showMoviesDataView();
-                        mMoviesAdapter.setMoviesData(movies);
-                    } else {
-                        showErrorMessage();
-                    }
-                }
+                displayFavoriteMoviesIfSelected(movies);
             }
         });
 
 
 
     }
+
+    private void setSpinnerPosition(Integer spinnerPosition){
+        if(spinnerPosition == SORT_POPULARITY){
+            mSortSpinnerPosition = SORT_POPULARITY;
+        }else if(spinnerPosition == SORT_TOP_RATED){
+            mSortSpinnerPosition = SORT_TOP_RATED;
+        }else if(spinnerPosition == SORT_FAVOURITES){
+            mSortSpinnerPosition = SORT_FAVOURITES;
+        }
+    }
+
+
+    private void displayMostPopularMoviesIfSelected(List<Movie> movies){
+        if(mSortSpinnerPosition == SORT_POPULARITY) {
+            displayMovies(movies);
+        }
+    }
+
+    private void displayTopRatedMoviesIfSelected(List<Movie> movies){
+        if(mSortSpinnerPosition == SORT_TOP_RATED){
+            displayMovies(movies);
+        }
+    }
+
+    private void displayFavoriteMoviesIfSelected(List<Movie> movies){
+        if(mSortSpinnerPosition == SORT_FAVOURITES) {
+            displayMovies(movies);
+        }
+    };
+
+    private void displayMovies(List<Movie> movies){
+        mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
+
+        if (movies != null) {
+            showMoviesDataView();
+            mMoviesAdapter.setMoviesData(movies);
+        } else {
+            showErrorMessage();
+        }
+    }
+
+
 
     private void showMoviesDataView() {
         mBinding.tvErrorMessageDisplay.setVisibility(View.INVISIBLE);
@@ -240,11 +219,25 @@ public class MainActivity extends AppCompatActivity implements
         }else if(mSortSpinnerPosition == SORT_FAVOURITES){
             MainViewModel.setSpinnerPosition(SORT_FAVOURITES);
             setFavoriteMovies();
-
         }
         else{
             showErrorMessage();
         }
+    }
+
+    private void setMostPopularMovies() {
+        mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
+        MainViewModel.startMostPopularMoviesService(this);
+    }
+
+    private void setTopRatedMovies(){
+        mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
+        MainViewModel.startTopRatedMoviesService(this);
+    }
+
+    private void setFavoriteMovies(){
+        mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
+        recreate();
     }
 
     @Override
