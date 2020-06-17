@@ -14,11 +14,6 @@ import java.util.List;
 public class MovieReviewsTask extends AsyncTask<String, Void, List<Review>> {
 
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
-    @Override
     protected List<Review> doInBackground(String... params) {
 
         String movieId = "";
@@ -27,7 +22,6 @@ public class MovieReviewsTask extends AsyncTask<String, Void, List<Review>> {
         }
 
         URL reviewsSearchUrl = NetworkUtils.buildReviewsUrl(movieId);
-        List<Review> reviews = null;
 
         try{
             String jsonReviewsResponse =

@@ -1,4 +1,4 @@
-package android.example.com.popularmovies;
+package android.example.com.popularmovies.data.model;
 
 import android.example.com.popularmovies.data.AppDatabase;
 import android.example.com.popularmovies.data.Movie;
@@ -11,13 +11,13 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
-public class CheckMovieViewModel extends ViewModel {
+public class DetailsViewModel extends ViewModel {
 
     private static LiveData<Movie> movie;
     private static MutableLiveData<List<Trailer>> trailers;
     private static MutableLiveData<List<Review>> reviews;
 
-    public CheckMovieViewModel(AppDatabase database, int movieId){
+    public DetailsViewModel(AppDatabase database, int movieId){
         movie = database.movieDao().loadMovieById(movieId);
     }
 
@@ -33,7 +33,7 @@ public class CheckMovieViewModel extends ViewModel {
     }
 
     public static void setTrailers(List<Trailer> trailers) {
-        CheckMovieViewModel.trailers.postValue(trailers);
+        DetailsViewModel.trailers.postValue(trailers);
     }
 
 
@@ -45,7 +45,7 @@ public class CheckMovieViewModel extends ViewModel {
     }
 
     public static void setReviews(List<Review> reviews) {
-        CheckMovieViewModel.reviews.postValue(reviews);
+        DetailsViewModel.reviews.postValue(reviews);
     }
 
 }

@@ -1,4 +1,4 @@
-package android.example.com.popularmovies;
+package android.example.com.popularmovies.data.model;
 
 import android.example.com.popularmovies.data.AppDatabase;
 
@@ -6,12 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-public class CheckMovieViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+public class DetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     private final AppDatabase mDb;
     private final int mMovieId;
 
-    public CheckMovieViewModelFactory(AppDatabase mDb, int mMovieId) {
+    public DetailsViewModelFactory(AppDatabase mDb, int mMovieId) {
         this.mDb = mDb;
         this.mMovieId = mMovieId;
     }
@@ -19,6 +19,6 @@ public class CheckMovieViewModelFactory extends ViewModelProvider.NewInstanceFac
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new CheckMovieViewModel(mDb, mMovieId);
+        return (T) new DetailsViewModel(mDb, mMovieId);
     }
 }

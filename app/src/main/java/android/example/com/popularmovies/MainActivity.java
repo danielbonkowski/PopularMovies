@@ -3,15 +3,14 @@ package android.example.com.popularmovies;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.content.Context;
 import android.content.Intent;
-import android.example.com.popularmovies.data.AppDatabase;
 import android.example.com.popularmovies.data.Movie;
+import android.example.com.popularmovies.data.model.MainViewModel;
 import android.example.com.popularmovies.databinding.ActivityMainBinding;
 import android.example.com.popularmovies.utilities.ImageUtils;
 import android.example.com.popularmovies.utilities.services.ServicesUtils;

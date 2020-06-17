@@ -1,6 +1,5 @@
 package android.example.com.popularmovies.utilities.services;
 
-import android.content.Context;
 import android.example.com.popularmovies.data.Trailer;
 import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
 import android.example.com.popularmovies.utilities.NetworkUtils;
@@ -15,11 +14,6 @@ import java.util.List;
 public class MovieTrailersTask extends AsyncTask<String, Void, List<Trailer>> {
 
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
-    @Override
     protected List<Trailer> doInBackground(String... params) {
 
         String movieId = "";
@@ -28,7 +22,6 @@ public class MovieTrailersTask extends AsyncTask<String, Void, List<Trailer>> {
         }
 
         URL trailersSearchUrl = NetworkUtils.buildTrailersUrl(movieId);
-        List<Trailer> trailers = null;
 
         try{
             String jsonTrailersResponse =

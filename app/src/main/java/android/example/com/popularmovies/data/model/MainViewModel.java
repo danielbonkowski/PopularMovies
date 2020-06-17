@@ -1,4 +1,4 @@
-package android.example.com.popularmovies;
+package android.example.com.popularmovies.data.model;
 
 import android.app.Application;
 import android.example.com.popularmovies.data.AppDatabase;

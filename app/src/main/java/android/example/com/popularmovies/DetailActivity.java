@@ -18,6 +18,8 @@ import android.example.com.popularmovies.data.AppDatabase;
 import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.data.Review;
 import android.example.com.popularmovies.data.Trailer;
+import android.example.com.popularmovies.data.model.DetailsViewModel;
+import android.example.com.popularmovies.data.model.DetailsViewModelFactory;
 import android.example.com.popularmovies.databinding.ActivityDetailBinding;
 import android.example.com.popularmovies.utilities.ImageUtils;
 import android.example.com.popularmovies.utilities.MovieDatabaseJsonUtils;
@@ -254,8 +256,8 @@ public class DetailActivity extends AppCompatActivity implements
 
     private void setupViewModel() {
 
-        CheckMovieViewModelFactory factory = new CheckMovieViewModelFactory(mDb, movie.getMovieId());
-        final CheckMovieViewModel viewModel = ViewModelProviders.of(this, factory).get(CheckMovieViewModel.class);
+        DetailsViewModelFactory factory = new DetailsViewModelFactory(mDb, movie.getMovieId());
+        final DetailsViewModel viewModel = ViewModelProviders.of(this, factory).get(DetailsViewModel.class);
         viewModel.getMovie().observe(this, new Observer<Movie>() {
             @Override
             public void onChanged(Movie movie) {
