@@ -9,10 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
+        android:background="@color/colorDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/barrier_for_synopsis"
-        android:background="@color/colorPrimary"/>
+        app:layout_constraintTop_toBottomOf="@+id/barrier_for_synopsis" />
 
     <TextView
         android:id="@+id/tv_trailer_name"
@@ -22,6 +22,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:textColor="@color/colorTextPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/iv_playback_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_playback_icon"
@@ -33,8 +35,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:contentDescription="@string/playback_icon_description"
+        android:tint="@color/colorPrimary"
+        android:tintMode="multiply"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_media_play" />
