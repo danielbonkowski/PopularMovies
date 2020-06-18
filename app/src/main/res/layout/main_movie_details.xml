@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_details_poster"
+            android:layout_width="125dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/poster_description"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/tv_details_original_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:textSize="22sp"
+            tools:text="1917"
+            app:layout_constraintStart_toEndOf="@+id/iv_details_poster"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_details_user_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/tv_original_title_label"
+            app:layout_constraintTop_toBottomOf="@+id/tv_original_title_label"
+            tools:text="8,9" />
+
+        <TextView
+            android:id="@+id/tv_details_release_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/tv_user_rating_label"
+            app:layout_constraintTop_toBottomOf="@+id/tv_user_rating_label"
+            tools:text="18.06.2020" />
+
+        <TextView
+            android:id="@+id/tv_original_title_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_label"
+            app:layout_constraintStart_toStartOf="@+id/tv_details_original_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_details_original_title" />
+
+        <TextView
+            android:id="@+id/tv_user_rating_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/user_rating_label"
+            app:layout_constraintStart_toStartOf="@+id/tv_details_user_rating"
+            app:layout_constraintTop_toBottomOf="@+id/tv_details_user_rating" />
+
+        <TextView
+            android:id="@+id/tv_release_date_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/release_date_label"
+            app:layout_constraintStart_toStartOf="@+id/tv_details_release_date"
+            app:layout_constraintTop_toBottomOf="@+id/tv_details_release_date" />
+
+        <ImageView
+            android:id="@+id/iv_favourite_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:contentDescription="@string/favourite_icon_description"
+            android:onClick="onStarClick"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_user_rating_label"
+            app:layout_constraintLeft_toRightOf="@+id/barrier_for_favorite_icon"
+            app:layout_constraintTop_toTopOf="@+id/tv_details_user_rating"
+            app:srcCompat="@android:drawable/btn_star_big_off" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_for_favorite_icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:barrierDirection="right"
+            app:constraint_referenced_ids="tv_user_rating_label,tv_details_user_rating"
+            tools:layout_editor_absoluteX="411dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

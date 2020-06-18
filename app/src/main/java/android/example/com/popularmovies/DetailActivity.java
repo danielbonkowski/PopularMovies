@@ -53,17 +53,17 @@ public class DetailActivity extends AppCompatActivity implements
 
         LinearLayoutManager trailersLayoutManager =new LinearLayoutManager(this, RecyclerView.VERTICAL,
                 false);
-        mBinding.rvTrailers.setLayoutManager(trailersLayoutManager);
-        mBinding.rvTrailers.setHasFixedSize(true);
+        mBinding.includeTrailersMovieDetails.rvTrailers.setLayoutManager(trailersLayoutManager);
+        mBinding.includeTrailersMovieDetails.rvTrailers.setHasFixedSize(true);
         mTrailersAdapter = new TrailersAdapter(this);
-        mBinding.rvTrailers.setAdapter(mTrailersAdapter);
+        mBinding.includeTrailersMovieDetails.rvTrailers.setAdapter(mTrailersAdapter);
 
         LinearLayoutManager reviewsLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL,
                 false);
-        mBinding.rvReviews.setLayoutManager(reviewsLayoutManager);
-        mBinding.rvReviews.setHasFixedSize(true);
+        mBinding.includeReviewsMovieDetails.rvReviews.setLayoutManager(reviewsLayoutManager);
+        mBinding.includeReviewsMovieDetails.rvReviews.setHasFixedSize(true);
         mReviewsAdapter = new ReviewsAdapter();
-        mBinding.rvReviews.setAdapter(mReviewsAdapter);
+        mBinding.includeReviewsMovieDetails.rvReviews.setAdapter(mReviewsAdapter);
 
 
         setupViewModel();
@@ -85,9 +85,9 @@ public class DetailActivity extends AppCompatActivity implements
             return;
         }
 
-        Context context = mBinding.ivDetailsPoster.getContext();
+        Context context = mBinding.includeMainMovieDetails.ivDetailsPoster.getContext();
         ImageUtils.loadPosterImage(context, movie.getMoviePoster(),
-                mBinding.ivDetailsPoster);
+                mBinding.includeMainMovieDetails.ivDetailsPoster);
 
         String originalTitle = movie.getOriginalTitle();
         Double userRating =  movie.getUserAverageRating();
@@ -95,10 +95,10 @@ public class DetailActivity extends AppCompatActivity implements
         String releaseDate = movie.getReleaseDate(DetailActivity.this);
 
 
-        mBinding.tvDetailsOriginalTitle.setText(originalTitle);
-        mBinding.tvDetailsUserRating.setText(userRating.toString());
-        mBinding.tvDetailsSynopsis.setText(plotSynopsis);
-        mBinding.tvDetailsReleaseDate.setText(releaseDate);
+        mBinding.includeMainMovieDetails.tvDetailsOriginalTitle.setText(originalTitle);
+        mBinding.includeMainMovieDetails.tvDetailsUserRating.setText(userRating.toString());
+        mBinding.includeSynopsisMovieDetails.tvDetailsSynopsis.setText(plotSynopsis);
+        mBinding.includeMainMovieDetails.tvDetailsReleaseDate.setText(releaseDate);
     }
 
     private void setupViewModel() {
@@ -156,23 +156,23 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     private void showTrailersDataView(){
-        mBinding.rvTrailers.setVisibility(View.VISIBLE);
-        mBinding.tvErrorTrailers.setVisibility(View.INVISIBLE);
+        mBinding.includeTrailersMovieDetails.rvTrailers.setVisibility(View.VISIBLE);
+        mBinding.includeTrailersMovieDetails.tvErrorTrailers.setVisibility(View.INVISIBLE);
     }
 
     private void showTrailersErrorMessage(){
-        mBinding.tvErrorTrailers.setVisibility(View.VISIBLE);
-        mBinding.rvTrailers.setVisibility(View.INVISIBLE);
+        mBinding.includeTrailersMovieDetails.tvErrorTrailers.setVisibility(View.VISIBLE);
+        mBinding.includeTrailersMovieDetails.rvTrailers.setVisibility(View.INVISIBLE);
     }
 
     private void showReviewsDataView(){
-        mBinding.rvReviews.setVisibility(View.VISIBLE);
-        mBinding.tvErrorReviews.setVisibility(View.INVISIBLE);
+        mBinding.includeReviewsMovieDetails.rvReviews.setVisibility(View.VISIBLE);
+        mBinding.includeReviewsMovieDetails.tvErrorReviews.setVisibility(View.INVISIBLE);
     }
 
     private void showReviewsErrorMessage(){
-        mBinding.tvErrorReviews.setVisibility(View.VISIBLE);
-        mBinding.rvReviews.setVisibility(View.INVISIBLE);
+        mBinding.includeReviewsMovieDetails.tvErrorReviews.setVisibility(View.VISIBLE);
+        mBinding.includeReviewsMovieDetails.rvReviews.setVisibility(View.INVISIBLE);
     }
 
 
@@ -227,12 +227,12 @@ public class DetailActivity extends AppCompatActivity implements
 
     private void displayNotFavoriteIcon(){
         isFavourite = false;
-        mBinding.ivFavouriteStar.setImageResource(android.R.drawable.btn_star_big_off);
+        mBinding.includeMainMovieDetails.ivFavouriteStar.setImageResource(android.R.drawable.btn_star_big_off);
     }
 
     private void displayFavoriteIcon(){
         isFavourite = true;
-        mBinding.ivFavouriteStar.setImageResource(android.R.drawable.btn_star_big_on);
+        mBinding.includeMainMovieDetails.ivFavouriteStar.setImageResource(android.R.drawable.btn_star_big_on);
 
     }
 
