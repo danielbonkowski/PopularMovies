@@ -35,7 +35,6 @@
                 android:id="@+id/barrier_for_synopsis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 app:barrierDirection="bottom"
                 app:constraint_referenced_ids="include_main_movie_details,include_trailers_movie_details"
                 tools:layout_editor_absoluteY="494dp" />

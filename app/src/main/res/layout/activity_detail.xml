@@ -14,43 +14,41 @@
             <include
                 android:id="@+id/include_main_movie_details"
                 layout="@layout/main_movie_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/activity_detail_includes"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <include
                 android:id="@+id/include_synopsis_movie_details"
                 layout="@layout/synopsis_movie_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/activity_detail_includes"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/include_main_movie_details" />
 
             <include
                 android:id="@+id/include_trailers_movie_details"
                 layout="@layout/trailers_movie_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/activity_detail_includes"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/include_synopsis_movie_details" />
 
             <include
                 android:id="@+id/include_reviews_movie_details"
                 layout="@layout/reviews_movie_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
+                style="@style/activity_detail_includes"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/include_trailers_movie_details" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
