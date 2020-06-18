@@ -108,7 +108,6 @@ public class DetailActivity extends AppCompatActivity implements
         viewModel.getMovie().observe(this, new Observer<Movie>() {
             @Override
             public void onChanged(Movie movie) {
-                viewModel.getMovie().removeObserver(this);
                 displayRightIcon(movie);
             }
         });
