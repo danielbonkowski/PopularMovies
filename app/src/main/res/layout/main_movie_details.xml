@@ -41,21 +41,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_details_poster"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="1917" />
+             />
 
         <TextView
             android:id="@+id/tv_details_user_rating"
             style="@style/main_details_date_and_rating"
             app:layout_constraintStart_toStartOf="@+id/tv_original_title_label"
             app:layout_constraintTop_toBottomOf="@+id/tv_original_title_label"
-            tools:text="8,9" />
+             />
 
         <TextView
             android:id="@+id/tv_details_release_date"
             style="@style/main_details_date_and_rating"
             app:layout_constraintStart_toStartOf="@+id/tv_user_rating_label"
             app:layout_constraintTop_toBottomOf="@+id/tv_user_rating_label"
-            tools:text="18.06.2020" />
+            />
 
         <TextView
             android:id="@+id/tv_original_title_label"
