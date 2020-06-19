@@ -10,8 +10,8 @@
             android:id="@+id/iv_favourite_star"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginLeft="@dimen/favorite_icon_left_margin"
+            android:layout_marginStart="@dimen/favorite_icon_left_margin"
             android:contentDescription="@string/favourite_icon_description"
             android:onClick="onStarClick"
             app:layout_constraintBottom_toBottomOf="@+id/tv_user_rating_label"
@@ -21,24 +21,21 @@
 
         <ImageView
             android:id="@+id/iv_details_poster"
-            android:layout_width="125dp"
-            android:layout_height="200dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
+            android:layout_width="@dimen/activity_detail_poster_width"
+            android:layout_height="@dimen/activity_detail_poster_height"
+            android:layout_marginStart="@dimen/activity_detail_poster_left_margin"
+            android:layout_marginLeft="@dimen/activity_detail_poster_left_margin"
             android:contentDescription="@string/poster_description"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_details_original_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="@dimen/activity_detail_original_title_left_margin"
+            android:layout_marginLeft="@dimen/activity_detail_original_title_left_margin"
             android:textColor="@color/colorTextPrimary"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
             app:layout_constraintEnd_toEndOf="parent"

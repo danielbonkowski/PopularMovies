@@ -11,7 +11,7 @@
     <style name="activity_detail_includes">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin_top</item>
     </style>
 
     <style name="main_details">
@@ -26,21 +26,21 @@
 
     <style name="main_details_date_and_rating" parent="main_details">
         <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault.Medium</item>
-        <item name="layout_goneMarginTop">8dp</item>
+        <item name="layout_goneMarginTop">@dimen/small_margin_top</item>
     </style>
 
     <style name="reviews_details">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">16dp</item>
-        <item name="android:layout_marginEnd">24dp</item>
-        <item name="android:layout_marginRight">24dp</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin_top</item>
+        <item name="android:layout_marginEnd">@dimen/review_details_margin_right</item>
+        <item name="android:layout_marginRight">@dimen/review_details_margin_right</item>
     </style>
 
     <style name="reviews_item">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginTop">@dimen/small_margin_top</item>
         <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
 

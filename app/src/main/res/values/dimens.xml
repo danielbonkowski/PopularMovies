@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="standard_margin_top">16dp</dimen>
+    <dimen name="small_margin_top">8dp</dimen>
+
+    <dimen name="activity_detail_standard_margin_top">@dimen/standard_margin_top</dimen>
+    <dimen name="activity_detail_poster_height">200dp</dimen>
+    <dimen name="activity_detail_poster_width">125dp</dimen>
+    <dimen name="activity_detail_poster_left_margin">24dp</dimen>
+    <dimen name="activity_detail_original_title_left_margin">16dp</dimen>
+
+    <dimen name="activity_main_error_message_text_size">20sp</dimen>
+    <dimen name="activity_main_error_message_padding">16dp</dimen>
+    <dimen name="activity_main_progress_bar_height">42dp</dimen>
+    <dimen name="activity_main_progress_bar_width">@dimen/activity_main_progress_bar_height</dimen>
+
+    <dimen name="grid_item_image_height">308dp</dimen>
+    <dimen name="grid_item_image_width">205dp</dimen>
+
+    <dimen name="favorite_icon_left_margin">16dp</dimen>
+
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="divider_margin_top">@dimen/small_margin_top</dimen>
+
+    <dimen name="review_details_margin_right">24dp</dimen>
+    <dimen name="reviews_label_margin_left">24dp</dimen>
+    <dimen name="reviews_recycler_view_margin_bottom">8dp</dimen>
+    <dimen name="reviews_error_message_margin_top">@dimen/small_margin_top</dimen>
+
+    <dimen name="spinner_item_text_size">16dp</dimen>
+
+    <dimen name="synopsis_text_view_margin_left">24dp</dimen>
+    <dimen name="synopsis_text_view_margin_right">@dimen/synopsis_text_view_margin_left</dimen>
+
+    <dimen name="playback_icon_margin_top">24dp</dimen>
+    <dimen name="playback_icon_margin_left">16dp</dimen>
+
+    <dimen name="trailer_name_margin_left">16dp</dimen>
+    <dimen name="trailer_name_margin_right">@dimen/trailer_name_margin_left</dimen>
+    <dimen name="trailers_label_margin_left">24dp</dimen>
+    <dimen name="trailers_label_margin_top">@dimen/standard_margin_top</dimen>
+    <dimen name="trailers_error_message_margin_top">@dimen/small_margin_top</dimen>
+    <dimen name="trailers_recycler_view_margin_left">24dp</dimen>
+    <dimen name="trailers_recycler_view_margin_right">24dp</dimen>
+
+
+</resources>

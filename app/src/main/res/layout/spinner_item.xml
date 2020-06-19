@@ -5,6 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_gravity="end"
     android:textColor="@color/colorTextIcons"
-    android:textSize="16sp"
+    android:textSize="@dimen/spinner_item_text_size"
     tools:text="Favorites"
     android:gravity="center_horizontal" />

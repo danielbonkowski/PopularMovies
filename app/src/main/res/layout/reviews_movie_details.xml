@@ -9,8 +9,8 @@
         <TextView
             android:id="@+id/tv_reviews_label"
             style="@style/reviews_details"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
+            android:layout_marginStart="@dimen/reviews_label_margin_left"
+            android:layout_marginLeft="@dimen/reviews_label_margin_left"
             android:text="@string/reviews_label"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
             android:textColor="@color/colorTextPrimary"
@@ -21,7 +21,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_reviews"
             style="@style/reviews_details"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="@dimen/reviews_recycler_view_margin_bottom"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tv_reviews_label"
@@ -42,7 +42,7 @@
             android:id="@+id/tv_error_reviews"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/reviews_error_message_margin_top"
             android:text="@string/reviews_error_message"
             android:textColor="@color/colorTextPrimary"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"

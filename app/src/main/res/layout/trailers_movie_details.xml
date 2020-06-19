@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools">
+xmlns:app="http://schemas.android.com/apk/res-auto">
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -9,9 +8,9 @@ xmlns:tools="http://schemas.android.com/tools">
     <TextView
         android:id="@+id/tv_trailers_label"
         style="@style/trailers_details"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/trailers_label_margin_left"
+        android:layout_marginLeft="@dimen/trailers_label_margin_left"
+        android:layout_marginTop="@dimen/trailers_label_margin_top"
         android:text="@string/trailers_label"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +19,7 @@ xmlns:tools="http://schemas.android.com/tools">
     <TextView
         android:id="@+id/tv_error_trailers"
         style="@style/trailers_details"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/trailers_error_message_margin_top"
         android:text="@string/trailers_error_message"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
         app:layout_constraintStart_toStartOf="@+id/tv_trailers_label"
@@ -41,10 +40,10 @@ xmlns:tools="http://schemas.android.com/tools">
         android:id="@+id/rv_trailers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginStart="@dimen/trailers_recycler_view_margin_left"
+        android:layout_marginLeft="@dimen/trailers_recycler_view_margin_left"
+        android:layout_marginEnd="@dimen/trailers_recycler_view_margin_right"
+        android:layout_marginRight="@dimen/trailers_recycler_view_margin_right"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/tv_trailers_label"
         app:layout_constraintTop_toBottomOf="@+id/tv_trailers_label" />
