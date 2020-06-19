@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 public final class NetworkUtils {
-    private static final String api_key = "58805f67e972e203a3e4cba8d3e54e00";
+    private static final String api_key = "YOUR_API_KEY";
 
     private static final String GRID_MOVIES_URL =
             "https://api.themoviedb.org/3/movie/";
@@ -93,10 +93,9 @@ public final class NetworkUtils {
     }
 
     public static Uri buildYoutubeTrailerUrl(String youtubeFilmId){
-        Uri builtUri = Uri.parse(YOUTUBE_URL).buildUpon()
+        return Uri.parse(YOUTUBE_URL).buildUpon()
                 .appendQueryParameter(YOUTUBE_ID_PARAM, youtubeFilmId)
                 .build();
-        return builtUri;
     }
 
 

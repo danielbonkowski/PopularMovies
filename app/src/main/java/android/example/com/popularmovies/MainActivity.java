@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements
         if(mSortSpinnerPosition == SORT_FAVOURITES) {
             displayMovies(movies);
         }
-    };
+    }
 
     private void displayMovies(List<Movie> movies){
         mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);

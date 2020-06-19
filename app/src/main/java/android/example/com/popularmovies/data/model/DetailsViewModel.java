@@ -27,7 +27,7 @@ public class DetailsViewModel extends ViewModel {
 
     public MutableLiveData<List<Trailer>> getTrailers() {
         if (trailers == null){
-            trailers = new MutableLiveData<List<Trailer>>();
+            trailers = new MutableLiveData<>();
         }
         return trailers;
     }
@@ -39,7 +39,7 @@ public class DetailsViewModel extends ViewModel {
 
     public MutableLiveData<List<Review>> getReviews() {
         if(reviews == null){
-            reviews = new MutableLiveData<List<Review>>();
+            reviews = new MutableLiveData<>();
         }
         return reviews;
     }

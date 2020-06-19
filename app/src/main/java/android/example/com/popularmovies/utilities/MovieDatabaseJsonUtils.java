@@ -17,7 +17,7 @@ import java.util.List;
 
 public class MovieDatabaseJsonUtils {
 
-    private static String TAG = MovieDatabaseJsonUtils.class.getSimpleName();
+    private static final String TAG = MovieDatabaseJsonUtils.class.getSimpleName();
 
     public static List<Movie> getMovieObjectsFromJson(String moviesJsonStr) throws JSONException {
 

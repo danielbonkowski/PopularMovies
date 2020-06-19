@@ -28,13 +28,12 @@
     <dimen name="reviews_recycler_view_margin_bottom">8dp</dimen>
     <dimen name="reviews_error_message_margin_top">@dimen/small_margin_top</dimen>
 
-    <dimen name="spinner_item_text_size">16dp</dimen>
+    <dimen name="spinner_item_text_size">16sp</dimen>
 
     <dimen name="synopsis_text_view_margin_left">24dp</dimen>
     <dimen name="synopsis_text_view_margin_right">@dimen/synopsis_text_view_margin_left</dimen>
 
     <dimen name="playback_icon_margin_top">24dp</dimen>
-    <dimen name="playback_icon_margin_left">16dp</dimen>
 
     <dimen name="trailer_name_margin_left">16dp</dimen>
     <dimen name="trailer_name_margin_right">@dimen/trailer_name_margin_left</dimen>

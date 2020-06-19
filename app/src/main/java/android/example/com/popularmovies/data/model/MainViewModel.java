@@ -26,7 +26,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public MutableLiveData<Integer> getSpinnerPosition() {
         if(spinnerPosition == null){
-            spinnerPosition = new MutableLiveData<Integer>();
+            spinnerPosition = new MutableLiveData<>();
         }
         return spinnerPosition;
     }
@@ -36,13 +36,13 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
-    public static LiveData<List<Movie>> getFavoriteMovies() {
+    public LiveData<List<Movie>> getFavoriteMovies() {
         return favoriteMovies;
     }
 
     public LiveData<List<Movie>> getTopRatedMovies() {
         if(topRatedMovies == null){
-            topRatedMovies = new MutableLiveData<List<Movie>>();
+            topRatedMovies = new MutableLiveData<>();
         }
         return topRatedMovies;
     }
@@ -52,9 +52,9 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
-    public static LiveData<List<Movie>> getMostPopularMovies() {
+    public LiveData<List<Movie>> getMostPopularMovies() {
         if(mostPopularMovies == null){
-            MainViewModel.mostPopularMovies = new MutableLiveData<List<Movie>>();
+            MainViewModel.mostPopularMovies = new MutableLiveData<>();
         }
         return MainViewModel.mostPopularMovies;
     }

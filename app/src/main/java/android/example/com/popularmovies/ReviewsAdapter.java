@@ -18,9 +18,6 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
 
     private List<Review> mReviewsData = null;
 
-    private final int MAX_REVIEW_LINES =  Integer.MAX_VALUE;
-    private final int FEW_REVIEW_LINES = 3;
-
     public void setReviewsData(List<Review> reviewsData){
         if(reviewsData != null){
             mReviewsData = new ArrayList<>(reviewsData);
@@ -58,8 +55,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
     }
 
     public class ReviewsAdapterViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener{
-        TextView mReviewAuthor;
-        TextView mReviewContent;
+        final TextView mReviewAuthor;
+        final TextView mReviewContent;
 
         public ReviewsAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,9 +80,11 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
 
             if(isElipsized){
                 mReviewContent.setEllipsize(null);
+                int MAX_REVIEW_LINES = Integer.MAX_VALUE;
                 mReviewContent.setMaxLines(MAX_REVIEW_LINES);
             }else{
                 mReviewContent.setEllipsize(TextUtils.TruncateAt.END);
+                int FEW_REVIEW_LINES = 3;
                 mReviewContent.setMaxLines(FEW_REVIEW_LINES);
             }
 

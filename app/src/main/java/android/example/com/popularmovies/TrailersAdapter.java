@@ -63,7 +63,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     }
 
     public class TrailersAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView mTrailerNameTextView;
+        final TextView mTrailerNameTextView;
 
 
         public TrailersAdapterViewHolder(@NonNull View itemView) {

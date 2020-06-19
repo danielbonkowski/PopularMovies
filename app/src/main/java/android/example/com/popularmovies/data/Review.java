@@ -1,5 +1,6 @@
 package android.example.com.popularmovies.data;
 
+
 public class Review {
 
     private final int filmId;

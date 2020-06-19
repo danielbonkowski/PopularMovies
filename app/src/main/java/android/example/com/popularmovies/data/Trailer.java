@@ -50,6 +50,7 @@ public class Trailer {
         return type;
     }
 
+
     public String toString(){
         return String.format("Id: %s key: %s name: %s \n" +
                 "site: %s quality: %d type: %s", trailerId, key, name, site, maxVideoQuality, type);

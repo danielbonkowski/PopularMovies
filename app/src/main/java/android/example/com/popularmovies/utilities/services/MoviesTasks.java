@@ -6,31 +6,28 @@ import android.example.com.popularmovies.data.Movie;
 import android.example.com.popularmovies.data.Review;
 import android.example.com.popularmovies.data.Trailer;
 
-import androidx.lifecycle.LiveData;
-
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+@SuppressWarnings("SameReturnValue")
 public class MoviesTasks {
 
-    public static LiveData<List<Movie>> executeTask(String action){
+    public static void executeTask(String action){
 
         if(ServicesUtils.ACTION_SET_MOST_POPULAR_MOVIES.equals(action)){
              setMostPopularMovies();
         }else if(ServicesUtils.ACTION_SET_TOP_RATED_MOVIES.equals(action)){
              setTopRatedMovies();
         }
-        return null;
     }
 
-    public static LiveData<List<Movie>> executeTask(String action, String movieId){
+    public static void executeTask(String action, String movieId){
 
         if(ServicesUtils.ACTION_SET_MOVIE_TRAILERS.equals(action)){
             setMovieTrailers(movieId);
         }else if(ServicesUtils.ACTION_SET_MOVIE_REVIEWS.equals(action)){
             setMovieReviews(movieId);
         }
-        return null;
     }
 
     private static void setTopRatedMovies() {
