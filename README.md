@@ -20,3 +20,7 @@ need to create a free API key at https://api.themoviedb.org
 and paste it into "api_key" variable in the NetworkUtils class.
 
 The application is functional both on Android smartphones as well as tablets.
+
+## License
+
+The contents of this repository are covered under the [MIT License](./LICENSE.md).
